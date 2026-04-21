@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^1.7.0",
-    "@leadpro/validators": "workspace:*"
+    "@leadpro/validators": "workspace:*",
+    "@leadpro/types": "workspace:*"
   }
 }

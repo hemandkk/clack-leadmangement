@@ -1,6 +1,11 @@
 import { apiClient } from "./client";
-import type { LoginInput } from "@leadpro/validators";
+import type {
+  LoginInput,
+  UpdateLeadInput,
+  CreateLeadInput,
+} from "@leadpro/validators";
 
+import type { LeadFilters } from "@leadpro/types";
 // Auth
 export const authApi = {
   login: (data: LoginInput) => apiClient.post("/auth/login", data),
@@ -11,31 +16,33 @@ export const authApi = {
 
 // Leads
 export const leadsApi = {
-  list: (params?: Record<string, unknown>) =>
-    apiClient.get("/leads", { params }),
+  list: (filters?: LeadFilters) => apiClient.get("/leads", { params: filters }),
+
   get: (id: string) => apiClient.get(`/leads/${id}`),
-  create: (data: unknown) => apiClient.post("/leads", data),
-  update: (id: string, data: unknown) => apiClient.put(`/leads/${id}`, data),
+
+  create: (data: CreateLeadInput) => apiClient.post("/leads", data),
+
+  update: (id: string, data: UpdateLeadInput) =>
+    apiClient.put(`/leads/${id}`, data),
+
   delete: (id: string) => apiClient.delete(`/leads/${id}`),
+
   assign: (id: string, staffId: string) =>
     apiClient.post(`/leads/${id}/assign`, { staffId }),
-};
 
-// Staff
-export const staffApi = {
-  list: (params?: Record<string, unknown>) =>
-    apiClient.get("/staff", { params }),
-  get: (id: string) => apiClient.get(`/staff/${id}`),
-  invite: (data: unknown) => apiClient.post("/staff/invite", data),
-  update: (id: string, data: unknown) => apiClient.put(`/staff/${id}`, data),
-};
+  updateStatus: (id: string, status: string) =>
+    apiClient.patch(`/leads/${id}/status`, { status }),
 
-// Leaves
-export const leavesApi = {
-  list: (params?: Record<string, unknown>) =>
-    apiClient.get("/leaves", { params }),
-  apply: (data: unknown) => apiClient.post("/leaves", data),
-  approve: (id: string) => apiClient.post(`/leaves/${id}/approve`),
-  reject: (id: string, reason: string) =>
-    apiClient.post(`/leaves/${id}/reject`, { reason }),
+  addNote: (id: string, note: string) =>
+    apiClient.post(`/leads/${id}/notes`, { note }),
+
+  getActivity: (id: string) => apiClient.get(`/leads/${id}/activity`),
+
+  bulkAssign: (leadIds: string[], staffId: string) =>
+    apiClient.post("/leads/bulk-assign", { leadIds, staffId }),
+
+  bulkUpdateStatus: (leadIds: string[], status: string) =>
+    apiClient.post("/leads/bulk-status", { leadIds, status }),
+
+  getKanban: () => apiClient.get("/leads/kanban"), // returns leads grouped by status
 };

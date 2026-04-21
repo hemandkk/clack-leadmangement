@@ -8,3 +8,4 @@ export * from "./leave";
 export * from "./report";
 export * from "./features";
 export * from "./integration";
+export * from "./dashboard";
