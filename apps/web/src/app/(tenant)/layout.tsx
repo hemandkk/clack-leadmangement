@@ -1,8 +1,9 @@
+"use client";
 import { AppShell } from "@/components/shared/layout/AppShell";
 import { TENANT_NAV_ITEMS } from "@/lib/navigation/tenantConfig";
 import { ADMIN_NAV_ITEMS } from "@/lib/navigation/adminConfig";
 import { useAuthStore } from "@/store/authStore";
-("use client");
+
 export default function TenantLayout({
   children,
 }: {
