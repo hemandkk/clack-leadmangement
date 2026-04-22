@@ -14,49 +14,48 @@ api-client/ # Axios/fetch wrappers for Laravel API │ ├── validators/ # Z
 schemas shared across web + mobile │ └── utils/ # Shared helpers (date, format,
 etc.) ├── turbo.json ├── package.json └── pnpm-workspace.yaml
 
-Web app folder structure (apps/web) apps/web/ ├── app/ │ ├── (auth)/ │ │ ├──
-login/ │ │ │ └── page.tsx │ │ ├── forgot-password/ │ │ │ └── page.tsx │ │ └──
-layout.tsx │ │ │ ├── (super-admin)/ │ │ ├── layout.tsx # Super admin shell
-layout │ │ ├── dashboard/ │ │ │ └── page.tsx │ │ ├── tenants/ │ │ │ ├──
-page.tsx # Tenants list │ │ │ ├── [id]/ │ │ │ │ ├── page.tsx # Tenant details │
-│ │ │ ├── billing/ │ │ │ │ └── settings/ │ │ │ └── create/ │ │ │ └── page.tsx │
-│ ├── pricing/ │ │ │ ├── page.tsx # Plans list │ │ │ └── [id]/ │ │ │ └──
-page.tsx │ │ ├── notifications/ │ │ │ └── page.tsx # Global notification
-settings │ │ └── settings/ │ │ └── page.tsx │ │ │ ├── (tenant)/ │ │ ├──
-layout.tsx # Tenant shell layout (role-aware sidebar) │ │ ├── dashboard/ │ │ │
-└── page.tsx │ │ ├── leads/ │ │ │ ├── page.tsx # Leads list/kanban │ │ │ ├──
-[id]/ │ │ │ │ └── page.tsx # Lead detail │ │ │ ├── assign/ │ │ │ │ └──
-page.tsx # Manual assignment │ │ │ └── import/ │ │ │ └── page.tsx │ │ ├──
-broadcasts/ │ │ │ ├── page.tsx │ │ │ └── create/ │ │ │ └── page.tsx │ │ ├──
-staff/ │ │ │ ├── page.tsx # Staff list │ │ │ ├── [id]/ │ │ │ │ ├── page.tsx │ │
-│ │ ├── calls/ │ │ │ │ ├── targets/ │ │ │ │ └── payments/ │ │ │ └── invite/ │ │
-│ └── page.tsx │ │ ├── leaves/ │ │ │ ├── page.tsx # Manager: leaves overview │ │
-│ └── apply/ │ │ │ └── page.tsx # Staff: apply for leave │ │ ├── calls/ │ │ │
-└── page.tsx # Call logs + recordings │ │ ├── reports/ │ │ │ ├── page.tsx │ │ │
-├── payments/ │ │ │ └── performance/ │ │ ├── integrations/ │ │ │ ├── page.tsx │
-│ │ ├── whatsapp/ │ │ │ │ └── page.tsx │ │ │ └── webhooks/ │ │ │ └── page.tsx │
-│ ├── settings/ │ │ │ ├── page.tsx │ │ │ ├── roles/ │ │ │ └── notifications/ │ │
-└── profile/ │ │ └── page.tsx │ │ │ ├── api/ # Next.js API routes (if needed for
-BFF/proxying) │ │ └── auth/ │ │ └── [...nextauth]/ │ │ └── route.ts │ │ │ ├──
-layout.tsx │ └── page.tsx # Root redirect │ ├── components/ │ ├── super-admin/ #
-SA-specific components │ │ ├── TenantCard.tsx │ │ ├── TenantTable.tsx │ │ ├──
-PricingPlanForm.tsx │ │ └── TenantMetricsWidget.tsx │ │ │ ├── tenant/ #
-Tenant-specific components │ │ ├── leads/ │ │ │ ├── LeadCard.tsx │ │ │ ├──
-LeadKanban.tsx │ │ │ ├── LeadTable.tsx │ │ │ ├── LeadFilters.tsx │ │ │ ├──
-LeadTimeline.tsx │ │ │ └── AssignLeadModal.tsx │ │ ├── staff/ │ │ │ ├──
-StaffCard.tsx │ │ │ ├── StaffTargetWidget.tsx │ │ │ └── StaffPaymentSummary.tsx
-│ │ ├── calls/ │ │ │ ├── CallLog.tsx │ │ │ ├── CallRecordingPlayer.tsx │ │ │ └──
-CallDurationBadge.tsx │ │ ├── leaves/ │ │ │ ├── LeaveCalendar.tsx │ │ │ ├──
-LeaveApplyForm.tsx │ │ │ └── LeaveStatusBadge.tsx │ │ ├── broadcasts/ │ │ │ ├──
-BroadcastComposer.tsx │ │ │ └── BroadcastList.tsx │ │ ├── reports/ │ │ │ ├──
-PaymentReportTable.tsx │ │ │ ├── PerformanceChart.tsx │ │ │ └──
-ReportDatePicker.tsx │ │ └── integrations/ │ │ ├── WhatsAppSetup.tsx │ │ └──
-WebhookForm.tsx │ │ │ └── shared/ # Shared layout/UI components │ ├── layout/ │
-│ ├── AppShell.tsx │ │ ├── Sidebar.tsx │ │ ├── TopBar.tsx │ │ ├──
-MobileSidebar.tsx │ │ └── NotificationBell.tsx │ ├── data/ │ │ ├──
-DataTable.tsx # TanStack Table wrapper │ │ ├── EmptyState.tsx │ │ └──
-LoadingRows.tsx │ └── feedback/ │ ├── Toast.tsx │ ├── ConfirmDialog.tsx │ └──
-PageLoader.tsx │ ├── hooks/ │ ├── useAuth.ts │ ├── usePermissions.ts #
+Web app folder structure apps/web/ ├── app/ │ ├── (auth)/ │ │ ├── login/ │ │ │
+└── page.tsx │ │ ├── forgot-password/ │ │ │ └── page.tsx │ │ └── layout.tsx │ │
+│ ├── (super-admin)/ │ │ ├── layout.tsx # Super admin shell layout │ │ ├──
+dashboard/ │ │ │ └── page.tsx │ │ ├── tenants/ │ │ │ ├── page.tsx # Tenants list
+│ │ │ ├── [id]/ │ │ │ │ ├── page.tsx # Tenant details │ │ │ │ ├── billing/ │ │ │
+│ └── settings/ │ │ │ └── create/ │ │ │ └── page.tsx │ │ ├── pricing/ │ │ │ ├──
+page.tsx # Plans list │ │ │ └── [id]/ │ │ │ └── page.tsx │ │ ├── notifications/
+│ │ │ └── page.tsx # Global notification settings │ │ └── settings/ │ │ └──
+page.tsx │ │ │ ├── (tenant)/ │ │ ├── layout.tsx # Tenant shell layout
+(role-aware sidebar) │ │ ├── dashboard/ │ │ │ └── page.tsx │ │ ├── leads/ │ │ │
+├── page.tsx # Leads list/kanban │ │ │ ├── [id]/ │ │ │ │ └── page.tsx # Lead
+detail │ │ │ ├── assign/ │ │ │ │ └── page.tsx # Manual assignment │ │ │ └──
+import/ │ │ │ └── page.tsx │ │ ├── broadcasts/ │ │ │ ├── page.tsx │ │ │ └──
+create/ │ │ │ └── page.tsx │ │ ├── staff/ │ │ │ ├── page.tsx # Staff list │ │ │
+├── [id]/ │ │ │ │ ├── page.tsx │ │ │ │ ├── calls/ │ │ │ │ ├── targets/ │ │ │ │
+└── payments/ │ │ │ └── invite/ │ │ │ └── page.tsx │ │ ├── leaves/ │ │ │ ├──
+page.tsx # Manager: leaves overview │ │ │ └── apply/ │ │ │ └── page.tsx # Staff:
+apply for leave │ │ ├── calls/ │ │ │ └── page.tsx # Call logs + recordings │ │
+├── reports/ │ │ │ ├── page.tsx │ │ │ ├── payments/ │ │ │ └── performance/ │ │
+├── integrations/ │ │ │ ├── page.tsx │ │ │ ├── whatsapp/ │ │ │ │ └── page.tsx │
+│ │ └── webhooks/ │ │ │ └── page.tsx │ │ ├── settings/ │ │ │ ├── page.tsx │ │ │
+├── roles/ │ │ │ └── notifications/ │ │ └── profile/ │ │ └── page.tsx │ │ │ ├──
+api/ # Next.js API routes (if needed for BFF/proxying) │ │ └── auth/ │ │ └──
+[...nextauth]/ │ │ └── route.ts │ │ │ ├── layout.tsx │ └── page.tsx # Root
+redirect │ ├── components/ │ ├── super-admin/ # SA-specific components │ │ ├──
+TenantCard.tsx │ │ ├── TenantTable.tsx │ │ ├── PricingPlanForm.tsx │ │ └──
+TenantMetricsWidget.tsx │ │ │ ├── tenant/ # Tenant-specific components │ │ ├──
+leads/ │ │ │ ├── LeadCard.tsx │ │ │ ├── LeadKanban.tsx │ │ │ ├── LeadTable.tsx │
+│ │ ├── LeadFilters.tsx │ │ │ ├── LeadTimeline.tsx │ │ │ └── AssignLeadModal.tsx
+│ │ ├── staff/ │ │ │ ├── StaffCard.tsx │ │ │ ├── StaffTargetWidget.tsx │ │ │ └──
+StaffPaymentSummary.tsx │ │ ├── calls/ │ │ │ ├── CallLog.tsx │ │ │ ├──
+CallRecordingPlayer.tsx │ │ │ └── CallDurationBadge.tsx │ │ ├── leaves/ │ │ │
+├── LeaveCalendar.tsx │ │ │ ├── LeaveApplyForm.tsx │ │ │ └──
+LeaveStatusBadge.tsx │ │ ├── broadcasts/ │ │ │ ├── BroadcastComposer.tsx │ │ │
+└── BroadcastList.tsx │ │ ├── reports/ │ │ │ ├── PaymentReportTable.tsx │ │ │
+├── PerformanceChart.tsx │ │ │ └── ReportDatePicker.tsx │ │ └── integrations/ │
+│ ├── WhatsAppSetup.tsx │ │ └── WebhookForm.tsx │ │ │ └── shared/ # Shared
+layout/UI components │ ├── layout/ │ │ ├── AppShell.tsx │ │ ├── Sidebar.tsx │ │
+├── TopBar.tsx │ │ ├── MobileSidebar.tsx │ │ └── NotificationBell.tsx │ ├──
+data/ │ │ ├── DataTable.tsx # TanStack Table wrapper │ │ ├── EmptyState.tsx │ │
+└── LoadingRows.tsx │ └── feedback/ │ ├── Toast.tsx │ ├── ConfirmDialog.tsx │
+└── PageLoader.tsx │ ├── hooks/ │ ├── useAuth.ts │ ├── usePermissions.ts #
 Role-based permission check hook │ ├── useLeads.ts │ ├── useStaff.ts │ ├──
 useLeaves.ts │ ├── useCalls.ts │ ├── useReports.ts │ └── useRealtime.ts #
 WebSocket subscription hook │ ├── lib/ │ ├── auth.ts # NextAuth or custom auth

@@ -13,7 +13,7 @@ import type { LeadFilters as ILeadFilters } from "@leadpro/types";
 type ViewMode = "kanban" | "table";
 
 export function LeadsPageClient() {
-  const [view, setView] = useState<ViewMode>("kanban");
+  const [view, setView] = useState<ViewMode>("table");
   const [showCreate, setCreate] = useState(false);
   const [filters, setFilters] = useState<ILeadFilters>({
     page: 1,
@@ -67,7 +67,7 @@ export function LeadsPageClient() {
       </div>
 
       {/* Filters */}
-      <LeadFilters filters={filters} onChange={setFilters} />
+      {/*  <LeadFilters filters={filters} onChange={setFilters} /> */}
 
       {/* Content */}
       {view === "kanban" ? (

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { leavesApi } from "@leadpro/api-client";
 import type { LeaveFilters } from "@leadpro/types";
-
+import { type ApplyLeaveInput } from "@leadpro/validators";
 export const leaveKeys = {
   all: () => ["leaves"] as const,
   list: (f?: LeaveFilters) => ["leaves", "list", f] as const,
@@ -27,7 +27,7 @@ export function useLeaveCalendar(year: number, month: number) {
 export function useApplyLeave() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: unknown) => leavesApi.apply(data),
+    mutationFn: (data: ApplyLeaveInput) => leavesApi.apply(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: leaveKeys.all() });
       toast.success("Leave application submitted");

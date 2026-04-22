@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { authApi } from "@leadpro/api-client";
 import { Button } from "@/components/ui/button";
-//import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function TopBar() {
   const router = useRouter();
@@ -29,19 +34,27 @@ export function TopBar() {
       <Button variant="ghost" size="icon" className="cursor-pointer">
         <Bell className="h-4 w-4" />
       </Button>
-      {/* <Avatar className="h-8 w-8">
+      <Avatar className="h-8 w-8">
         <AvatarFallback className="text-xs bg-slate-900 text-white">
-          {user?.name?.charAt(0).toUpperCase() ?? 'U'}
+          {user?.name?.charAt(0).toUpperCase() ?? "U"}
         </AvatarFallback>
-      </Avatar> */}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleLogout}
-        className="cursor-pointer"
-      >
-        <LogOut className="h-4 w-4" />
-      </Button>
+      </Avatar>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleLogout}
+            className="cursor-pointer"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Logout</p>
+        </TooltipContent>
+      </Tooltip>
     </header>
   );
 }
