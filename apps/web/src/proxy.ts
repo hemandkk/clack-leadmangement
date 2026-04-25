@@ -25,14 +25,14 @@ export function proxy(request: NextRequest) {
 
   if (userRole === "super_admin") {
     if (!pathname.startsWith(SUPER_ADMIN_ROOT)) {
-      //return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
   }
 
   // Tenant users → only tenant routes
   if (userRole !== "super_admin") {
     if (pathname.startsWith(SUPER_ADMIN_ROOT)) {
-      //return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 

@@ -9,3 +9,5 @@ export * from "./report";
 export * from "./features";
 export * from "./integration";
 export * from "./dashboard";
+export * from "./broadcast";
+export * from "./telephony";

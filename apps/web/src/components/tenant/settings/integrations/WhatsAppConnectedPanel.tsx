@@ -103,8 +103,8 @@ export function WhatsAppConnectedPanel({ config }: Props) {
           <div className="space-y-2">
             {(templates ?? []).length === 0 ? (
               <p className="text-sm text-slate-400 py-4 text-center">
-                No templates yet. Click "Sync from Meta" to import approved
-                templates.
+                No templates yet. Click &quot Sync from Meta &quot to import
+                approved templates.
               </p>
             ) : (
               (templates as WhatsAppTemplate[]).map((tpl) => (

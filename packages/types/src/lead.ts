@@ -16,10 +16,33 @@ export type LeadSource =
 
 export type LeadPriority = "low" | "medium" | "high";
 
+export type LeadType = "new" | "existing";
+
+export interface ContactNumber {
+  id?: string;
+  number: string;
+  label: "mobile" | "work" | "home" | "other";
+  isPrimary: boolean;
+}
+export interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  price?: number;
+  category?: string;
+  isActive: boolean;
+}
+export interface Organisation {
+  id: string;
+  name: string;
+  industry?: string;
+  website?: string;
+}
 export interface Lead {
   id: string;
   name: string;
   phone: string;
+  contactNumbers: ContactNumber[];
   email?: string;
   status: LeadStatus;
   source: LeadSource;
@@ -30,6 +53,9 @@ export interface Lead {
     name: string;
     avatar?: string;
   };
+  organisation?: Organisation;
+  products?: Product[];
+  expectedClosureDate?: string;
   tenantId: string;
   notes?: string;
   tags?: string[];
@@ -55,6 +81,7 @@ export interface LeadFilters {
   source?: LeadSource[];
   assignedTo?: string;
   priority?: LeadPriority;
+  type?: LeadType;
   search?: string;
   dateFrom?: string;
   dateTo?: string;

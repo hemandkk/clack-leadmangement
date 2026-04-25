@@ -20,7 +20,7 @@ export interface WhatsAppConfig {
   updatedAt: string;
 }
 
-export interface WhatsAppTemplate {
+export interface WhatsAppTemplate1 {
   id: string;
   name: string;
   category: "MARKETING" | "UTILITY" | "AUTHENTICATION";

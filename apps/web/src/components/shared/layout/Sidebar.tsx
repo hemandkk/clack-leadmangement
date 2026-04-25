@@ -5,13 +5,20 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  Phone,
+  PhoneCall,
   Calendar,
   BarChart3,
   Settings,
   ChevronLeft,
   Mail,
+  Building2,
+  Megaphone,
+  CheckSquare,
+  Radio,
+  CalendarCheck,
+  UserCog,
 } from "lucide-react";
+
 import { useUIStore } from "@/store/uiStore";
 import { usePermissions } from "@/hooks/usePermissions";
 import { cn } from "@leadpro/utils";
@@ -19,6 +26,7 @@ import { NavItem } from "@/types/navigation/navItem";
 type SidebarProps = {
   items: NavItem[];
 };
+
 export function Sidebar({ items }: SidebarProps) {
   const pathname = usePathname();
   const { sidebarOpen, toggleSidebar } = useUIStore();

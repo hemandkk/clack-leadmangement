@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col gap-2">
         <Providers>
           {/*  <Header /> */}
-          <main className="min-h-screen mt-10">{children}</main>
+          <main className="min-h-screen">{children}</main>
         </Providers>
       </body>
     </html>

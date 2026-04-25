@@ -4,3 +4,6 @@ export * from "./setting-endpoints";
 export * from "./dashboard";
 export * from "./staff";
 export * from "./leaves";
+export * from "./master";
+export * from "./broadcast";
+export * from "./telephony";

@@ -10,6 +10,9 @@ import {
   MessageSquare,
   Calendar,
   User,
+  Building2,
+  Package,
+  Star,
 } from "lucide-react";
 import {
   useLeadDetail,
@@ -32,9 +35,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatDate, formatDateTime } from "@leadpro/utils";
+import { formatDate, formatDateTime, formatCurrency } from "@leadpro/utils";
 import { STATUS_CONFIG, SOURCE_CONFIG } from "@/lib/leadConfig";
-import type { LeadStatus, LeadSource } from "@leadpro/types";
+import type { LeadStatus } from "@leadpro/types";
 
 export function LeadDetailClient({ id }: { id: string }) {
   const router = useRouter();
@@ -69,29 +72,49 @@ export function LeadDetailClient({ id }: { id: string }) {
     addNote(note, { onSuccess: () => setNote("") });
   };
 
+  // Primary phone
+  const primaryContact =
+    lead.contactNumbers?.find((c: any) => c.isPrimary) ??
+    lead.contactNumbers?.[0];
+
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Back button */}
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800"
+        className="flex items-center gap-1.5 text-sm text-slate-500
+          hover:text-slate-800"
       >
         <ArrowLeft className="h-4 w-4" /> Back to leads
       </button>
 
       <div className="grid grid-cols-3 gap-6">
-        {/* Left: lead info */}
+        {/* Left: main content */}
         <div className="col-span-2 space-y-4">
           {/* Header card */}
           <div className="bg-white border border-slate-200 rounded-xl p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h1 className="text-xl font-semibold text-slate-900">
-                  {lead.name}
-                </h1>
-                <p className="text-sm text-slate-400 mt-0.5">
-                  {SOURCE_CONFIG[lead.source as LeadSource].icon}{" "}
-                  {SOURCE_CONFIG[lead.source as LeadSource].label} · Added{" "}
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-xl font-semibold text-slate-900">
+                    {lead.name}
+                  </h1>
+                  {/* Lead type badge */}
+                  {lead.type && (
+                    <Badge
+                      variant="outline"
+                      className={
+                        lead.type === "existing"
+                          ? "border-teal-300 text-teal-700 bg-teal-50"
+                          : "border-blue-300 text-blue-700 bg-blue-50"
+                      }
+                    >
+                      {lead.type === "existing" ? "🔄 Existing" : "✨ New"}
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-sm text-slate-400">
+                  {SOURCE_CONFIG[lead.source].icon}{" "}
+                  {SOURCE_CONFIG[lead.source].label} · Added{" "}
                   {formatDate(lead.createdAt)}
                 </p>
               </div>
@@ -100,7 +123,7 @@ export function LeadDetailClient({ id }: { id: string }) {
               </Button>
             </div>
 
-            {/* Status + priority row */}
+            {/* Status + priority */}
             <div className="flex items-center gap-3 mb-5">
               {editingStatus ? (
                 <Select
@@ -126,55 +149,114 @@ export function LeadDetailClient({ id }: { id: string }) {
               <LeadPriorityBadge priority={lead.priority} />
               {lead.value && (
                 <Badge variant="outline" className="text-xs font-medium">
-                  ₹{lead.value.toLocaleString("en-IN")}
+                  {formatCurrency(lead.value)}
                 </Badge>
               )}
+              {lead.expectedClosureDate && (
+                <div className="flex items-center gap-1 text-xs text-slate-500">
+                  <Calendar className="h-3.5 w-3.5" />
+                  Close by {formatDate(lead.expectedClosureDate)}
+                </div>
+              )}
             </div>
 
-            {/* Contact grid */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2 text-sm">
-                <Phone className="h-4 w-4 text-slate-400" />
-                <span>{lead.phone}</span>
+            {/* Contact numbers */}
+            <div className="space-y-1.5 mb-4">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                Contact numbers
+              </p>
+              {(
+                lead.contactNumbers ?? [
+                  { number: lead.phone, label: "mobile", isPrimary: true },
+                ]
+              ).map((c: any, i: number) => (
+                <div key={i} className="flex items-center gap-2">
+                  <Phone className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                  <span className="text-sm text-slate-700">{c.number}</span>
+                  <span className="text-xs text-slate-400 capitalize">
+                    {c.label}
+                  </span>
+                  {c.isPrimary && (
+                    <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {lead.email && (
+              <div className="flex items-center gap-2 mb-4">
+                <Mail className="h-3.5 w-3.5 text-slate-400" />
+                <span className="text-sm">{lead.email}</span>
               </div>
-              {lead.email && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4 text-slate-400" />
-                  <span>{lead.email}</span>
-                </div>
-              )}
-              {lead.assignedStaff && (
-                <div className="flex items-center gap-2 text-sm">
-                  <User className="h-4 w-4 text-slate-400" />
-                  <span>{lead.assignedStaff.name}</span>
-                </div>
-              )}
-              {lead.lastContactedAt && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-slate-400" />
-                  <span>
-                    Last contact: {formatDateTime(lead.lastContactedAt)}
+            )}
+
+            {/* Organisation */}
+            {lead.organisation && (
+              <div className="flex items-center gap-2 mb-4">
+                <Building2 className="h-3.5 w-3.5 text-slate-400" />
+                <span className="text-sm font-medium text-slate-700">
+                  {lead.organisation.name}
+                </span>
+                {lead.organisation.industry && (
+                  <span className="text-xs text-slate-400">
+                    · {lead.organisation.industry}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Products */}
+            {(lead.products ?? []).length > 0 && (
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Package className="h-3.5 w-3.5 text-slate-400" />
+                  <span className="text-xs font-semibold text-slate-500">
+                    Products
                   </span>
                 </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {lead.products!.map((p: any) => (
+                    <span
+                      key={p.id}
+                      className="text-xs bg-slate-100 text-slate-700
+                        px-2 py-0.5 rounded-full border border-slate-200"
+                    >
+                      {p.name}
+                      {p.price && (
+                        <span className="text-slate-400 ml-1">
+                          {formatCurrency(p.price)}
+                        </span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Assigned to */}
+            <div className="flex items-center gap-2">
+              <User className="h-3.5 w-3.5 text-slate-400" />
+              <span className="text-sm text-slate-500">Assigned to:</span>
+              {lead.assignedStaff ? (
+                <div className="flex items-center gap-1.5">
+                  <Avatar className="h-5 w-5">
+                    <AvatarFallback className="text-[9px] bg-slate-700 text-white">
+                      {lead.assignedStaff.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium">
+                    {lead.assignedStaff.name}
+                  </span>
+                </div>
+              ) : (
+                <span className="text-sm text-slate-400">Unassigned</span>
               )}
             </div>
 
-            {/* Notes */}
             {lead.notes && (
               <div className="mt-4 pt-4 border-t border-slate-100">
                 <p className="text-xs text-slate-400 mb-1">Notes</p>
                 <p className="text-sm text-slate-700">{lead.notes}</p>
-              </div>
-            )}
-
-            {/* Tags */}
-            {lead.tags?.length && (
-              <div className="mt-3 flex gap-1.5 flex-wrap">
-                {lead.tags.map((tag: any) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
               </div>
             )}
           </div>
@@ -199,40 +281,12 @@ export function LeadDetailClient({ id }: { id: string }) {
             </Button>
           </div>
 
-          {/* Activity timeline */}
+          {/* Timeline */}
           <LeadTimeline activities={activity ?? []} />
         </div>
 
-        {/* Right: sidebar info */}
+        {/* Right sidebar */}
         <div className="space-y-4">
-          {/* Assigned staff */}
-          <div className="bg-white border border-slate-200 rounded-xl p-4">
-            <p className="text-xs font-medium text-slate-500 mb-3">
-              Assigned to
-            </p>
-            {lead.assignedStaff ? (
-              <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                  <AvatarFallback className="bg-slate-800 text-white text-sm">
-                    {lead.assignedStaff.name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-medium">
-                    {lead.assignedStaff.name}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm text-slate-400 mb-2">Not assigned</p>
-                <Button variant="outline" size="sm" className="w-full text-xs">
-                  Assign staff
-                </Button>
-              </div>
-            )}
-          </div>
-
           {/* Quick actions */}
           <div className="bg-white border border-slate-200 rounded-xl p-4">
             <p className="text-xs font-medium text-slate-500 mb-3">
@@ -243,8 +297,16 @@ export function LeadDetailClient({ id }: { id: string }) {
                 variant="outline"
                 size="sm"
                 className="w-full justify-start text-xs"
+                onClick={() =>
+                  window.open(`tel:${primaryContact?.number ?? lead.phone}`)
+                }
               >
-                <Phone className="h-3.5 w-3.5 mr-2" /> Log a call
+                <Phone className="h-3.5 w-3.5 mr-2" /> Call
+                {primaryContact?.number && (
+                  <span className="ml-auto text-slate-400 text-[10px]">
+                    {primaryContact.number}
+                  </span>
+                )}
               </Button>
               <Button
                 variant="outline"
@@ -273,21 +335,37 @@ export function LeadDetailClient({ id }: { id: string }) {
           {/* Meta info */}
           <div className="bg-white border border-slate-200 rounded-xl p-4">
             <p className="text-xs font-medium text-slate-500 mb-3">Details</p>
-            <dl className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <dt className="text-slate-400">Created</dt>
-                <dd className="text-slate-700">{formatDate(lead.createdAt)}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-slate-400">Updated</dt>
-                <dd className="text-slate-700">{formatDate(lead.updatedAt)}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-slate-400">Source</dt>
-                <dd className="text-slate-700">
-                  {SOURCE_CONFIG[lead.source as LeadSource].label}
-                </dd>
-              </div>
+            <dl className="space-y-2.5 text-xs">
+              {[
+                {
+                  label: "Type",
+                  value: lead.type === "existing" ? "🔄 Existing" : "✨ New",
+                },
+                { label: "Source", value: SOURCE_CONFIG[lead.source].label },
+                { label: "Created", value: formatDate(lead.createdAt) },
+                { label: "Updated", value: formatDate(lead.updatedAt) },
+                ...(lead.expectedClosureDate
+                  ? [
+                      {
+                        label: "Closes by",
+                        value: formatDate(lead.expectedClosureDate),
+                      },
+                    ]
+                  : []),
+                ...(lead.lastContactedAt
+                  ? [
+                      {
+                        label: "Last contact",
+                        value: formatDate(lead.lastContactedAt),
+                      },
+                    ]
+                  : []),
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between">
+                  <dt className="text-slate-400">{item.label}</dt>
+                  <dd className="text-slate-700 font-medium">{item.value}</dd>
+                </div>
+              ))}
               <div className="flex justify-between">
                 <dt className="text-slate-400">Lead ID</dt>
                 <dd className="text-slate-400 font-mono text-[10px]">

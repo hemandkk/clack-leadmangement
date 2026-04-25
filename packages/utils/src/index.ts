@@ -2,3 +2,4 @@ export * from "./date";
 export * from "./format";
 export * from "./cn";
 export * from "./phone";
+export * from "./lead";

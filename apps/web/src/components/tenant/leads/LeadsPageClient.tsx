@@ -59,8 +59,12 @@ export function LeadsPageClient() {
             ))}
           </div>
 
-          <Button onClick={() => setCreate(true)} size="sm">
-            <Plus className="h-4 w-4 mr-1.5" />
+          <Button
+            className="bg-red-500 cursor-pointer"
+            onClick={() => setCreate(true)}
+            size="sm"
+          >
+            <Plus className="h-4 w-4 mr-1.5 " />
             Add lead
           </Button>
         </div>

@@ -30,7 +30,7 @@ export function TopBar() {
   };
 
   return (
-    <header className="h-16 border-b  border-slate-200 bg-white flex items-center justify-end px-6 gap-3">
+    <header className="h-16 border-b bg-linear-to-l from-orange-600 via-pink-500 to-orange-400 border-slate-200 bg-white flex items-center justify-end px-6 gap-3">
       <Button variant="ghost" size="icon" className="cursor-pointer">
         <Bell className="h-4 w-4" />
       </Button>
