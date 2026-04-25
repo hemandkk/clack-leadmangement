@@ -33,7 +33,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginInput) => {
     try {
       const res = await authApi.login(data);
-      console.log("resss", res.data);
+
       const { access_token, user /* features */ } = res.data;
       if (!access_token) {
         throw new Error("Invalid token response");

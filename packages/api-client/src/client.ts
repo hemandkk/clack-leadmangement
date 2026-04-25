@@ -35,3 +35,33 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+// 👉 Add interceptor
+apiClient.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+
+    let subdomain: string | null = null;
+
+    const parts = hostname.split(".");
+    if (parts.length > 2) {
+      subdomain = parts[0];
+    }
+
+    const EXCLUDED_ROUTES = ["/register", "/verify-otp", "/setup-tenant"];
+
+    const isExcluded = EXCLUDED_ROUTES.some((route) =>
+      config.url?.startsWith(route),
+    );
+    if (!isExcluded && subdomain) {
+      config.headers["X-Tenant-Subdomain"] = subdomain;
+    }
+    if (!subdomain && hostname.includes("localhost")) {
+      subdomain = "default"; // or test tenant
+    }
+    if (1) {
+      config.headers["X-Tenant-Subdomain"] = "bharathi-airtel1";
+    }
+  }
+
+  return config;
+});

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { User, AuthTokens, TenantFeatureMap } from "@leadpro/types";
 import type { Feature } from "@leadpro/types";
-import { setAuthToken, setTenantId } from "@leadpro/api-client";
+import { setAuthToken /* setTenantId */ } from "@leadpro/api-client";
 
 interface AuthStore {
   user: Partial<User> | null;
@@ -29,13 +29,13 @@ export const useAuthStore = create<AuthStore>()(
 
       setAuth: (user, tokens, features) => {
         setAuthToken(tokens.accessToken);
-        setTenantId(user.tenantId ?? null);
+        //setTenantId(user.tenantId ?? null);
         set({ user, tokens, features, isAuthenticated: true });
       },
 
       clearAuth: () => {
         setAuthToken(null);
-        setTenantId(null);
+        //setTenantId(null);
         set({ user: null, tokens: null, features: {}, isAuthenticated: false });
       },
 

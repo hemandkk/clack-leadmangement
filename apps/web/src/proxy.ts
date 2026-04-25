@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_ROUTES = ["/login", "/forgot-password"];
+const PUBLIC_ROUTES = ["/login", "/forgot-password", "/register"];
 const SUPER_ADMIN_ROOT = "/admin";
+// Routes that should NOT receive tenant header
+const EXCLUDED_ROUTES = ["/register", "/verify-otp", "/setup-tenant"];
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, hostname } = request.nextUrl;
 
   // Allow public routes through
   if (PUBLIC_ROUTES.some((r) => pathname.startsWith(r))) {
@@ -14,7 +16,7 @@ export function proxy(request: NextRequest) {
   // Read token from cookie (set this cookie on login)
   const token = request.cookies.get("access_token")?.value;
   const userRole = request.cookies.get("user_role")?.value;
-  const tenantId = request.cookies.get("tenant_id")?.value;
+  //const tenantId = request.cookies.get("tenant_id")?.value;
 
   // No token → redirect to login
   if (!token) {
@@ -35,16 +37,33 @@ export function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
-
+  // 🚀 Extract subdomain
+  const hostParts = hostname.split(".");
+  let subdomain: string | null = null;
+  if (hostParts.length > 2) {
+    subdomain = hostParts[0]; // e.g. tenant.example.com → tenant
+  }
+  // 🚫 Skip excluded routes
+  const isExcluded = EXCLUDED_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+  // Clone request headers
+  const requestHeaders = new Headers(request.headers);
   // Inject tenant ID into request headers for server components
-  const response = NextResponse.next();
-  if (tenantId) {
-    response.headers.set("x-tenant-id", tenantId);
+
+  // ✅ Add header only if NOT excluded and subdomain exists
+  if (!isExcluded && subdomain) {
+    requestHeaders.set("X-Tenant-Subdomain", subdomain);
   }
 
-  return response;
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
+  //matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],Middleware does NOT run for /api/*
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };
