@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -48,12 +48,13 @@ interface Props {
 }
 
 export function LeadTable({ filters, onFiltersChange }: Props) {
+  const memoFilters = useMemo(() => filters, [filters.page, filters.search]);
   const router = useRouter();
-  const { data, isLoading } = useLeadsList(filters);
+  const { data, isLoading } = useLeadsList(memoFilters);
   const { mutate: deleteLead } = useDeleteLead();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [rowSelection, setRowSelection] = useState({});
-
+  console.log("API DATA:", data);
   const leads: Lead[] = data?.data ?? [];
   const meta = data?.meta;
 
@@ -95,15 +96,17 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
           <p className="font-medium text-sm text-slate-900">
             {row.original.name}
           </p>
-          <p className="text-xs text-slate-400">{row.original.phone}</p>
+          <p className="text-xs text-slate-400">
+            {row.original.contactNumbers?.[0]?.number ?? "—"}
+          </p>
         </div>
       ),
     },
-    {
+    /*     {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => <LeadStatusBadge status={row.original.status} />,
-    },
+    }, */
     {
       accessorKey: "priority",
       header: "Priority",
@@ -117,21 +120,26 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
       ),
     },
     {
-      accessorKey: "assignedStaff",
+      accessorKey: "assignedTo",
       header: "Assigned to",
       cell: ({ row }) => {
         const staff = row.original.assignedStaff;
         if (!staff) return <span className="text-xs text-slate-300">—</span>;
         return (
-          <div className="flex items-center gap-2">
+          <span className="text-xs text-slate-300">
+            {row.original.assignedTo}
+          </span>
+        );
+        {
+          /* <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               <AvatarFallback className="text-[10px] bg-slate-700 text-white">
                 {staff.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <span className="text-sm text-slate-700">{staff.name}</span>
-          </div>
-        );
+          </div> */
+        }
       },
     },
     {

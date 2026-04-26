@@ -1,5 +1,5 @@
-import {TenantFeatureMap} from './features'
-export type UserRole = 'super_admin' | 'owner' | 'manager' | 'sales_staff';
+import { TenantFeatureMap } from "./features";
+export type UserRole = "super_admin" | "owner" | "manager" | "sales_staff";
 
 export interface User {
   id: string;
@@ -8,14 +8,14 @@ export interface User {
   role: UserRole;
   tenantId?: string;
   avatar?: string;
-  mobile_prefix:string;
-  mobile:string;
-  status:true;
+  mobile_prefix: string;
+  mobile: string;
+  status: true;
 }
 
 export interface AuthTokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
   expiresAt: number;
 }
 

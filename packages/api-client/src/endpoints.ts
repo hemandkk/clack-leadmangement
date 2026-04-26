@@ -3,6 +3,7 @@ import type {
   LoginInput,
   UpdateLeadInput,
   CreateLeadInput,
+  RegisterInput,
 } from "@leadpro/validators";
 
 import type { LeadFilters } from "@leadpro/types";
@@ -12,6 +13,9 @@ export const authApi = {
   logout: () => apiClient.post("/auth/logout"),
   me: () => apiClient.get("/auth/me"),
   refresh: (token: string) => apiClient.post("/auth/refresh", { token }),
+  register: (data: RegisterInput) => apiClient.post("/auth/register", data),
+  verifyOtp: (data: string) => apiClient.post("/auth/verify-otp", data),
+  setupTenant: (data: string) => apiClient.post("/auth/setup-tenant", data),
 };
 
 // Leads

@@ -11,3 +11,4 @@ export * from "./integration";
 export * from "./dashboard";
 export * from "./broadcast";
 export * from "./telephony";
+export * from "./staffManagement";

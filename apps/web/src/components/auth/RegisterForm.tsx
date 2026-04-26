@@ -4,14 +4,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { loginSchema, type LoginInput } from "@leadpro/validators";
+import { registerSchema, type RegisterInput } from "@leadpro/validators";
 import { PHONE_PREFIXES } from "@leadpro/utils";
 import { authApi } from "@leadpro/api-client";
 import { useAuthStore } from "@/store/authStore";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-export function LoginForm() {
+export function RegisterForm() {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
 
@@ -20,35 +21,21 @@ export function LoginForm() {
     handleSubmit,
     //watch,//It lets you read form values in real-time
     formState: { errors, isSubmitting },
-  } = useForm<LoginInput>({
+  } = useForm<RegisterInput>({
     defaultValues: {
       mobile: "",
       password: "",
+      name: "",
       mobile_prefix: "+91",
     },
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(registerSchema),
   });
-  //const email = watch('email');console.log(email);
-  const onSubmit = async (data: LoginInput) => {
+
+  const onSubmit = async (data: RegisterInput) => {
     try {
-      const res = await authApi.login(data);
+      const res = await authApi.register(data);
 
       const { access_token, user /* features */, expires_in } = res.data;
-      if (!access_token) {
-        throw new Error("Invalid token response");
-      }
-      // Store in Zustand
-      setAuth(
-        user,
-        { accessToken: access_token, expiresAt: expires_in } /* , features */,
-      );
-
-      // Set cookies for middleware (in production use httpOnly cookies via API)
-      document.cookie = `access_token=${access_token}; path=/`;
-      document.cookie = `user_role=${user.role}; path=/`;
-      if (user.tenantId) {
-        document.cookie = `tenant_id=${user.tenantId}; path=/`;
-      }
 
       // Role-based redirect
       if (user.role === "super_admin") {
@@ -67,6 +54,36 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Name */}
+      <div className="mb-4">
+        <label className="text-sm text-gray-600">Full Name</label>
+
+        <Input
+          placeholder="Enter Full Name"
+          id="name"
+          type="text"
+          {...register("name")}
+          className="mt-1"
+        />
+        {errors.name && (
+          <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+        )}
+      </div>
+      {/* Email */}
+      <div className="mb-4">
+        <label className="text-sm text-gray-600">Email</label>
+
+        <Input
+          placeholder="test@test.com"
+          id="email"
+          type="email"
+          {...register("email")}
+          className="mt-1"
+        />
+        {errors.email && (
+          <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+        )}
+      </div>
       {/* Mobile */}
 
       <div className="mb-4">
@@ -90,11 +107,15 @@ export function LoginForm() {
             {...register("mobile")}
             className="mt-1"
           />
-
-          {errors.mobile && (
-            <p className="text-red-500 text-xs mt-1">{errors.mobile.message}</p>
-          )}
         </div>
+        {errors.mobile_prefix && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors.mobile_prefix.message}
+          </p>
+        )}
+        {errors.mobile && (
+          <p className="text-red-500 text-xs mt-1">{errors.mobile.message}</p>
+        )}
       </div>
 
       {/* Password */}
@@ -112,9 +133,22 @@ export function LoginForm() {
           <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
         )}
       </div>
+      {/* Confirm Password */}
+      <div className="mb-4">
+        <label className="text-sm text-gray-600">Confirm Password</label>
 
-      <div className="text-right text-xs text-gray-500 mb-4 cursor-pointer">
-        Forgot Password?
+        <Input
+          placeholder="Enter password"
+          id="password_confirmation"
+          type="password"
+          {...register("password_confirmation")}
+          className="mt-1"
+        />
+        {errors.password_confirmation && (
+          <p className="text-red-500 text-xs mt-1">
+            {errors.password_confirmation.message}
+          </p>
+        )}
       </div>
 
       <button
@@ -122,15 +156,8 @@ export function LoginForm() {
         type="submit"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Signing in..." : "Sign in"}
+        {isSubmitting ? "Signing Up..." : "Sign Up"}
       </button>
-
-      <p className="text-center text-xs mt-4 text-gray-500">
-        Don&apos;t have an account?{" "}
-        <Link href="/register">
-          <span className="text-orange-500 cursor-pointer">Signup</span>
-        </Link>
-      </p>
     </form>
   );
 }

@@ -1,4 +1,4 @@
-export type StaffRole = "owner" | "manager" | "sales_staff";
+import { StaffRole } from "./staffManagement";
 export type StaffStatus = "active" | "inactive" | "invited";
 
 export interface Staff {

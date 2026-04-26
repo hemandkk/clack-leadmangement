@@ -27,6 +27,8 @@ export function useLeadsList(filters: LeadFilters) {
       return res.data;
     },
     placeholderData: (prev) => prev, // keeps old data while fetching
+    staleTime: 1000 * 60, // 1 minute
+    refetchOnWindowFocus: false,
   });
 }
 

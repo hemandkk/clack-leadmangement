@@ -61,6 +61,12 @@ apiClient.interceptors.request.use((config) => {
     if (1) {
       config.headers["X-Tenant-Subdomain"] = "bharathi-airtel1";
     }
+    const token = JSON.parse(localStorage.getItem("leadpro-auth") || "{}")
+      ?.state?.tokens?.accessToken;
+
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
   }
 
   return config;

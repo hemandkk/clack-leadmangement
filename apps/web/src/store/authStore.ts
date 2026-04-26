@@ -25,6 +25,7 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       tokens: null,
       features: {},
+      access_token: "",
       isAuthenticated: false,
 
       setAuth: (user, tokens, features) => {
@@ -36,7 +37,12 @@ export const useAuthStore = create<AuthStore>()(
       clearAuth: () => {
         setAuthToken(null);
         //setTenantId(null);
-        set({ user: null, tokens: null, features: {}, isAuthenticated: false });
+        set({
+          user: null,
+          tokens: null,
+          features: {},
+          isAuthenticated: false,
+        });
       },
 
       //hasFeature: (feature) => get().features[feature] === true,
@@ -49,7 +55,13 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
         features: state.features,
         isAuthenticated: state.isAuthenticated,
+        tokens: state.tokens,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.tokens?.accessToken) {
+          setAuthToken(state.tokens.accessToken);
+        }
+      },
     },
   ),
 );

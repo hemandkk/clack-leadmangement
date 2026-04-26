@@ -23,6 +23,7 @@ export interface ContactNumber {
   number: string;
   label: "mobile" | "work" | "home" | "other";
   isPrimary: boolean;
+  mobile_prefix?: string;
 }
 export interface Product {
   id: string;
@@ -48,6 +49,7 @@ export interface Lead {
   source: LeadSource;
   priority: LeadPriority;
   assignedTo?: string;
+  type?: string;
   assignedStaff?: {
     id: string;
     name: string;
@@ -107,4 +109,27 @@ export interface KanbanColumn {
   label: string;
   color: string;
   leads: Lead[];
+}
+export interface ApiContactNumber {
+  mobile_prefix: string;
+  number: string;
+  label: string;
+  isPrimary: boolean;
+}
+
+export interface ApiLead {
+  id: number;
+  name: string;
+  email: string;
+  contactNumbers: ApiContactNumber[];
+  source: string;
+  priority: string;
+  type: string;
+  assignedTo: number | null;
+  productIds: number[];
+  expectedClosureDate: string;
+  value: number | null;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
 }
