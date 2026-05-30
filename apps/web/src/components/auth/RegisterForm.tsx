@@ -4,7 +4,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { registerSchema, type RegisterInput } from "@leadpro/validators";
+import {
+  registerSchema,
+  type RegisterInput,
+  RegisterOTPInput,
+} from "@leadpro/validators";
 import { PHONE_PREFIXES } from "@leadpro/utils";
 import { authApi } from "@leadpro/api-client";
 import { useAuthStore } from "@/store/authStore";

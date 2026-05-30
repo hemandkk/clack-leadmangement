@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/components/auth/RegisterForm";
+import { RegisterFormShell } from "@/components/auth/RegisterFormShell";
 import Image from "next/image";
 export default function LoginPage() {
   return (
@@ -45,10 +45,7 @@ export default function LoginPage() {
 
       <div className="md:w-1/2 w-full flex items-center justify-center">
         <div className="w-87.5">
-          <h2 className="text-xl font-semibold text-orange-500 mb-6">
-            Register!
-          </h2>
-          <RegisterForm />
+          <RegisterFormShell />
         </div>
       </div>
     </>

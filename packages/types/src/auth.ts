@@ -24,3 +24,14 @@ export interface LoginResponse {
   tokens: AuthTokens;
   features: TenantFeatureMap;
 }
+export enum RegisterStep {
+  REGISTER = "REGISTER",
+  VERIFY_OTP = "VERIFY_OTP",
+  ONBOARD = "ONBOARD",
+}
+
+interface Login {
+  user: string;
+  taoken: number;
+  sis: boolean;
+}

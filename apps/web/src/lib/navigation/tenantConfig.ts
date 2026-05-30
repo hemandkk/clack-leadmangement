@@ -14,6 +14,7 @@ import {
   CalendarCheck,
   UserCog,
   Phone,
+  MessageCircle,
 } from "lucide-react";
 
 const NAV = [
@@ -103,6 +104,7 @@ export const TENANT_NAV_ITEMS = [
   { href: "/tasks", label: "Tasks", icon: CheckSquare, permission: null },
   { href: "/campaigns", label: "Campaign", icon: Megaphone, permission: null },
   { href: "/broadcasts", label: "Broadcasts", icon: Mail, permission: null },
+  { href: "/whatsapp", label: "WhatsApp Inbox", icon: MessageCircle, permission: null },
   { href: "/telephony", label: "Calls", icon: PhoneCall, permission: null },
   { href: "/leaves", label: "Leaves", icon: Calendar, permission: null },
   { href: "/followups", label: "Follow-ups", icon: Mail, permission: null },

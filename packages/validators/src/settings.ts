@@ -34,6 +34,17 @@ export const whatsappConnectSchema = z.object({
   businessAccountId: z.string().min(5, "Business Account ID required"),
 });
 
+export const whatsappPhoneNumberSchema = z.object({
+  phoneNumberId: z.string().min(5, "Phone Number ID required"),
+  displayPhoneNumber: z.string().min(8, "Display phone number required"),
+  assignedStaffId: z.string().optional(),
+  isDefault: z.boolean().default(false),
+});
+
+export const whatsappSendMessageSchema = z.object({
+  text: z.string().trim().min(1, "Message cannot be empty").max(4096),
+});
+
 export type GeneralSettingsInput = z.infer<typeof generalSettingsSchema>;
 export type NotificationSettingsInput = z.infer<
   typeof notificationSettingsSchema
@@ -41,3 +52,9 @@ export type NotificationSettingsInput = z.infer<
 export type LeadSettingsInput = z.infer<typeof leadSettingsSchema>;
 export type WebhookInput = z.infer<typeof webhookSchema>;
 export type WhatsAppConnectInput = z.infer<typeof whatsappConnectSchema>;
+export type WhatsAppPhoneNumberInput = z.infer<
+  typeof whatsappPhoneNumberSchema
+>;
+export type WhatsAppSendMessageInput = z.infer<
+  typeof whatsappSendMessageSchema
+>;

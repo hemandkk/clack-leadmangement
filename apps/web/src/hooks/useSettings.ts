@@ -1,10 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { AxiosError } from "axios";
 import { settingsApi } from "@leadpro/api-client";
+import type {
+  WhatsAppPhoneNumberInput,
+  WhatsAppSendMessageInput,
+} from "@leadpro/validators";
 
 export const settingKeys = {
   general: () => ["settings", "general"] as const,
   whatsapp: () => ["settings", "whatsapp"] as const,
+  waPhoneNumbers: () => ["settings", "whatsapp", "phone-numbers"] as const,
+  waConversations: (search?: string) =>
+    ["whatsapp", "conversations", search ?? ""] as const,
+  waMessages: (conversationId: string) =>
+    ["whatsapp", "messages", conversationId] as const,
   waTemplates: () => ["settings", "wa-templates"] as const,
   webhooks: () => ["settings", "webhooks"] as const,
   deliveries: (id: string) => ["settings", "webhook-deliveries", id] as const,
@@ -47,7 +57,7 @@ export function useConnectWhatsApp() {
       qc.invalidateQueries({ queryKey: settingKeys.whatsapp() });
       toast.success("WhatsApp connected successfully");
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError<{ message?: string }>) => {
       toast.error(err?.response?.data?.message ?? "Connection failed");
     },
   });
@@ -61,6 +71,78 @@ export function useDisconnectWhatsApp() {
       qc.invalidateQueries({ queryKey: settingKeys.whatsapp() });
       toast.success("WhatsApp disconnected");
     },
+  });
+}
+
+export function useVerifyWhatsAppWebhook() {
+  return useMutation({
+    mutationFn: () => settingsApi.verifyWebhook(),
+    onSuccess: () => toast.success("Webhook verified successfully"),
+    onError: () => toast.error("Webhook verification failed"),
+  });
+}
+
+export function useWhatsAppPhoneNumbers() {
+  return useQuery({
+    queryKey: settingKeys.waPhoneNumbers(),
+    queryFn: async () => (await settingsApi.listWhatsAppPhoneNumbers()).data,
+  });
+}
+
+export function useAddWhatsAppPhoneNumber() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: WhatsAppPhoneNumberInput) =>
+      settingsApi.addWhatsAppPhoneNumber(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: settingKeys.waPhoneNumbers() });
+      toast.success("WhatsApp number added");
+    },
+    onError: () => toast.error("Failed to add WhatsApp number"),
+  });
+}
+
+export function useDeleteWhatsAppPhoneNumber() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => settingsApi.deleteWhatsAppPhoneNumber(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: settingKeys.waPhoneNumbers() });
+      toast.success("WhatsApp number removed");
+    },
+    onError: () => toast.error("Failed to remove WhatsApp number"),
+  });
+}
+
+export function useWhatsAppConversations(search?: string) {
+  return useQuery({
+    queryKey: settingKeys.waConversations(search),
+    queryFn: async () =>
+      (await settingsApi.listWhatsAppConversations({ search })).data,
+  });
+}
+
+export function useWhatsAppMessages(conversationId?: string) {
+  return useQuery({
+    queryKey: settingKeys.waMessages(conversationId ?? ""),
+    queryFn: async () =>
+      (await settingsApi.listWhatsAppMessages(conversationId!)).data,
+    enabled: !!conversationId,
+  });
+}
+
+export function useSendWhatsAppMessage(conversationId?: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: WhatsAppSendMessageInput) =>
+      settingsApi.sendWhatsAppMessage(conversationId!, data),
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: settingKeys.waMessages(conversationId ?? ""),
+      });
+      qc.invalidateQueries({ queryKey: ["whatsapp", "conversations"] });
+    },
+    onError: () => toast.error("Failed to send WhatsApp message"),
   });
 }
 

@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CheckCircle2,
-  Circle,
   Copy,
   ExternalLink,
   Eye,
@@ -16,8 +15,12 @@ import {
   whatsappConnectSchema,
   type WhatsAppConnectInput,
 } from "@leadpro/validators";
-import { useConnectWhatsApp } from "@/hooks/useSettings";
+import {
+  useConnectWhatsApp,
+  useVerifyWhatsAppWebhook,
+} from "@/hooks/useSettings";
 import { SettingsCard } from "../SettingsCard";
+import { WhatsAppPrerequisites } from "./WhatsAppPrerequisites";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,11 +44,12 @@ export function WhatsAppConnectWizard({ currentConfig }: Props) {
   const [showToken, setShowToken] = useState(false);
   const [webhookTested, setWebhookTested] = useState(false);
   const { mutate: connect, isPending } = useConnectWhatsApp();
+  const { mutate: verifyWebhook, isPending: verifyingWebhook } =
+    useVerifyWhatsAppWebhook();
 
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm<WhatsAppConnectInput>({
     resolver: zodResolver(whatsappConnectSchema),
@@ -69,6 +73,8 @@ export function WhatsAppConnectWizard({ currentConfig }: Props) {
 
   return (
     <div className="space-y-6">
+      {step === 1 && <WhatsAppPrerequisites />}
+
       {/* Stepper */}
       <div className="flex items-center gap-2">
         {STEPS.map((s, i) => {
@@ -223,7 +229,7 @@ export function WhatsAppConnectWizard({ currentConfig }: Props) {
             <div>
               <Label>Callback URL</Label>
               <p className="text-xs text-slate-400 mb-1.5">
-                Paste this into the "Callback URL" field in Meta
+                Paste this into the &quot;Callback URL&quot; field in Meta
               </p>
               <div className="flex items-center gap-2">
                 <Input
@@ -246,7 +252,7 @@ export function WhatsAppConnectWizard({ currentConfig }: Props) {
             <div>
               <Label>Verify Token</Label>
               <p className="text-xs text-slate-400 mb-1.5">
-                Paste this into the "Verify Token" field in Meta
+                Paste this into the &quot;Verify Token&quot; field in Meta
               </p>
               <div className="flex items-center gap-2">
                 <Input
@@ -300,16 +306,19 @@ export function WhatsAppConnectWizard({ currentConfig }: Props) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
-                  // Call verify API, on success set webhookTested
-                  setTimeout(() => {
-                    setWebhookTested(true);
-                    toast.success("Webhook verified successfully");
-                  }, 1500);
-                }}
+                onClick={() =>
+                  verifyWebhook(undefined, {
+                    onSuccess: () => setWebhookTested(true),
+                  })
+                }
+                disabled={verifyingWebhook}
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Test webhook connection
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${
+                    verifyingWebhook ? "animate-spin" : ""
+                  }`}
+                />
+                {verifyingWebhook ? "Testing..." : "Test webhook connection"}
               </Button>
               {webhookTested && (
                 <p className="text-xs text-green-600 flex items-center gap-1 mt-2">

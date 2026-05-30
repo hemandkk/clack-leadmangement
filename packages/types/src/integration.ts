@@ -29,6 +29,51 @@ export interface WhatsAppTemplate1 {
   components: WhatsAppTemplateComponent[];
 }
 
+export type WhatsAppPhoneNumberStatus =
+  | "pending"
+  | "connected"
+  | "restricted"
+  | "disconnected";
+
+export interface WhatsAppPhoneNumber {
+  id: string;
+  phoneNumberId: string;
+  displayPhoneNumber: string;
+  verifiedName?: string;
+  qualityRating?: "green" | "yellow" | "red";
+  status: WhatsAppPhoneNumberStatus;
+  assignedStaffId?: string;
+  assignedStaffName?: string;
+  isDefault: boolean;
+}
+
+export interface WhatsAppConversation {
+  id: string;
+  prospectId?: string;
+  prospectName: string;
+  prospectPhone: string;
+  assignedStaffId?: string;
+  assignedStaffName?: string;
+  phoneNumberId: string;
+  phoneNumber?: string;
+  lastMessage?: string;
+  lastMessageAt?: string;
+  unreadCount: number;
+  canSendFreeform: boolean;
+}
+
+export interface WhatsAppMessage {
+  id: string;
+  conversationId: string;
+  metaMessageId?: string;
+  direction: "inbound" | "outbound";
+  type: "text" | "template" | "image" | "document" | "audio" | "system";
+  text?: string;
+  status: "queued" | "sent" | "delivered" | "read" | "failed" | "received";
+  sentAt: string;
+  senderName?: string;
+}
+
 export interface WhatsAppTemplateComponent {
   type: "HEADER" | "BODY" | "FOOTER" | "BUTTONS";
   text?: string;

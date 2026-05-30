@@ -15,7 +15,6 @@ import {
 } from "@/hooks/useSettings";
 import { SettingsCard } from "../SettingsCard";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +26,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { WhatsAppConfig, WhatsAppTemplate } from "@leadpro/types";
+import { WhatsAppPhoneNumbersPanel } from "./WhatsAppPhoneNumbersPanel";
 
 interface Props {
   config: WhatsAppConfig;
@@ -70,6 +70,8 @@ export function WhatsAppConnectedPanel({ config }: Props) {
           </div>
         </div>
       </SettingsCard>
+
+      <WhatsAppPhoneNumbersPanel />
 
       {/* Templates */}
       <SettingsCard
@@ -199,9 +201,10 @@ function QualityBadge({ rating }: { rating?: "green" | "yellow" | "red" }) {
 
 function TemplateRow({ template }: { template: WhatsAppTemplate }) {
   const statusMap = {
-    APPROVED: { label: "Approved", cls: "bg-green-50 text-green-700" },
-    PENDING: { label: "Pending", cls: "bg-yellow-50 text-yellow-700" },
-    REJECTED: { label: "Rejected", cls: "bg-red-50 text-red-600" },
+    draft: { label: "Draft", cls: "bg-slate-100 text-slate-600" },
+    pending_approval: { label: "Pending", cls: "bg-yellow-50 text-yellow-700" },
+    approved: { label: "Approved", cls: "bg-green-50 text-green-700" },
+    rejected: { label: "Rejected", cls: "bg-red-50 text-red-600" },
   };
   const s = statusMap[template.status];
   return (

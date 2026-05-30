@@ -25,10 +25,29 @@ export const registerSchema = z
     message: "Passwords do not match",
     path: ["password_confirmation"],
   });
-
+export const registerOTPSchema = z.object({
+  name: z.string().min(2, "Full name must be at least 8 characters").readonly(),
+  mobile_prefix: z.string().min(1, "Required").readonly(),
+  mobile: z
+    .string()
+    .regex(/^[0-9]{6,15}$/, "Invalid phone number")
+    .readonly(),
+  email: z.string().email("Invalid email").readonly(),
+  otp: z
+    .string()
+    .min(6, "Enter 6 Letter OTP Received in Mail")
+    .max(6, "Enter 6 Letter OTP Received in Mail"),
+});
 export const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email"),
+});
+export const setupTenantSchema = z.object({
+  organization_name: z.string().nonempty("Please enter Organiztion Name"),
+  subdomain: z.string().nonempty("Please enter Sub Domain"),
+  expected_user_count: z.number(),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type RegisterOTPInput = z.infer<typeof registerOTPSchema>;
+export type SetupTenantInput = z.infer<typeof setupTenantSchema>;

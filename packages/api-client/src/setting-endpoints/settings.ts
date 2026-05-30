@@ -11,6 +11,18 @@ export const settingsApi = {
     apiClient.post("/integrations/whatsapp/connect", data),
   disconnectWhatsApp: () => apiClient.delete("/integrations/whatsapp"),
   verifyWebhook: () => apiClient.post("/integrations/whatsapp/verify-webhook"),
+  listWhatsAppPhoneNumbers: () =>
+    apiClient.get("/integrations/whatsapp/phone-numbers"),
+  addWhatsAppPhoneNumber: (data: unknown) =>
+    apiClient.post("/integrations/whatsapp/phone-numbers", data),
+  deleteWhatsAppPhoneNumber: (id: string) =>
+    apiClient.delete(`/integrations/whatsapp/phone-numbers/${id}`),
+  listWhatsAppConversations: (params?: unknown) =>
+    apiClient.get("/whatsapp/conversations", { params }),
+  listWhatsAppMessages: (conversationId: string) =>
+    apiClient.get(`/whatsapp/conversations/${conversationId}/messages`),
+  sendWhatsAppMessage: (conversationId: string, data: unknown) =>
+    apiClient.post(`/whatsapp/conversations/${conversationId}/messages`, data),
   getWATemplates: () => apiClient.get("/integrations/whatsapp/templates"),
   syncWATemplates: () =>
     apiClient.post("/integrations/whatsapp/templates/sync"),

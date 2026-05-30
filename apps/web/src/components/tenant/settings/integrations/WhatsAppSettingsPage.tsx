@@ -6,7 +6,7 @@ import { WhatsAppConnectedPanel } from "./WhatsAppConnectedPanel";
 import { SettingsCard } from "../SettingsCard";
 
 export function WhatsAppSettingsPage() {
-  const { data: config, isLoading } = useWhatsAppConfig();
+  const { data: config, isLoading, isError } = useWhatsAppConfig();
 
   if (isLoading) {
     return (
@@ -14,6 +14,20 @@ export function WhatsAppSettingsPage() {
         <div className="h-32 bg-slate-100 rounded-xl animate-pulse" />
         <div className="h-64 bg-slate-100 rounded-xl animate-pulse" />
       </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SettingsCard
+        title="WhatsApp Business API"
+        description="Unable to load your WhatsApp integration settings"
+      >
+        <p className="text-sm text-red-600">
+          Check your connection and try again. If this persists, verify the
+          tenant integration endpoint.
+        </p>
+      </SettingsCard>
     );
   }
 
@@ -38,7 +52,7 @@ export function WhatsAppSettingsPage() {
               WhatsApp Business
             </p>
             <p className="text-xs text-slate-400">
-              Connect via Meta's Cloud API (no hardware required)
+              Connect via Meta&apos;s Cloud API (no hardware required)
             </p>
           </div>
           <div className="ml-auto">
