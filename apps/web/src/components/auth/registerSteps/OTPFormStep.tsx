@@ -50,7 +50,7 @@ export function OTPFormStep({
       setIsResending(true);
 
       await handleSubmit(reSendOTP)();
-      setTimer(30);
+      setTimer(60);
     } finally {
       setIsResending(false);
     }

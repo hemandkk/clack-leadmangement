@@ -14,7 +14,7 @@ type RegisterState = {
 };
 
 export const useRegisterStore = create<RegisterState>((set) => ({
-  step: RegisterStep.ONBOARD,
+  step: RegisterStep.REGISTER,
   registerData: null,
   onboardingToken: null,
   setStep: (step) => set({ step }),

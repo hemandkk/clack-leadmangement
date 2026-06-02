@@ -37,7 +37,6 @@ export function OnboardingStep({ onSubmit, onBack }: Props) {
   const debouncedSubdomain = useDebounce(subdomain, 500);
 
   // auto-generate subdomain
-
   useEffect(() => {
     if (!orgName || subdomainEdited) return;
 
@@ -55,9 +54,7 @@ export function OnboardingStep({ onSubmit, onBack }: Props) {
     const check = async () => {
       try {
         setStatus("checking");
-
         const res = await authApi.checkSubdomain(debouncedSubdomain);
-
         setStatus(res.data.available ? "available" : "taken");
       } catch {
         setStatus("idle");
@@ -67,13 +64,6 @@ export function OnboardingStep({ onSubmit, onBack }: Props) {
     check();
   }, [debouncedSubdomain]);
 
-  const handleSetup = async (data: SetupTenantInput) => {
-    const res = await authApi.setupTenant(data);
-
-    const subdomain = res.data.tenant_subdomain;
-
-    window.location.href = `https://${subdomain}.yourapp.com/login`;
-  };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">

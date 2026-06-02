@@ -8,6 +8,7 @@ import { RegisterFormStep } from "./registerSteps/RegisterFormStep";
 import { OTPFormStep } from "./registerSteps/OTPFormStep";
 import { OnboardingStep } from "./registerSteps/OnboardingStep";
 import { useRegisterStore } from "@/store/registerStore";
+import { useRegister } from "@/hooks/useAuth";
 import {
   type RegisterInput,
   type RegisterOTPInput,
@@ -26,6 +27,8 @@ export function RegisterFormShell() {
     reset,
   } = useRegisterStore();
 
+  const registerMutation = useRegister();
+
   // STEP 1 → REGISTER
   const handleRegister = async (data: RegisterInput) => {
     try {
@@ -38,6 +41,11 @@ export function RegisterFormShell() {
     } catch (error: unknown) {
       toast.error(getApiErrorMessage(error, "Register failed"));
     }
+  };
+
+  const handleRegister1 = async (data: RegisterInput) => {
+    await registerMutation.mutateAsync(data);
+    setStep(RegisterStep.VERIFY_OTP);
   };
 
   // STEP 2 → VERIFY OTP
@@ -62,19 +70,26 @@ export function RegisterFormShell() {
   };
 
   // STEP 3 → ONBOARD
+
   const handleOnboard = async (data: SetupTenantInput) => {
     try {
-      await authApi.setupTenant(data);
+      const res = await authApi.setupTenant(data);
       toast.success("Account setup complete");
-      // Redirect to subdomain login
-      router.push(`https://${data.subdomain}.yourdomain.com/login`);
-    } catch (error: unknown) {
+      const subdomain = res.data.tenant_subdomain;
+      const isDev = window.location.hostname.includes("localhost");
+      const url = isDev
+        ? `http://${subdomain}.lvh.me:3000/login`
+        : `https://${subdomain}.yourdomain.com/login`;
+
+      window.location.href = url;
+    } catch (error) {
       toast.error(getApiErrorMessage(error, "Onboarding failed"));
     }
   };
-  /* if (step === RegisterStep.ONBOARD && !onboardingToken) {
+
+  if (step === RegisterStep.ONBOARD && !onboardingToken) {
     setStep(RegisterStep.REGISTER);
-  } */
+  }
   return (
     <>
       {step === RegisterStep.REGISTER && (
