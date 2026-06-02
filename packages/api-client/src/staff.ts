@@ -1,9 +1,10 @@
 import { apiClient } from "./client";
+import type { Staff } from "@leadpro/types";
 
 export const staffApi = {
   // Staff CRUD
   list: (params?: unknown) => apiClient.get("/staff", { params }),
-  get: (id: string) => apiClient.get(`/staff/${id}`),
+  get: (id: string) => apiClient.get<Staff>(`/staff/${id}`),
   invite: (data: unknown) => apiClient.post("/staff/invite", data),
   update: (id: string, d: unknown) => apiClient.put(`/staff/${id}`, d),
   deactivate: (id: string) => apiClient.post(`/staff/${id}/deactivate`),

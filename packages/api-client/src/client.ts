@@ -35,7 +35,7 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-// 👉 Add interceptor
+//  Add interceptor
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
@@ -61,11 +61,18 @@ apiClient.interceptors.request.use((config) => {
     if (1) {
       config.headers["X-Tenant-Subdomain"] = "bharathi-airtel1";
     }
+    // need to un comment this
+    /* if (subdomain) {
+      config.headers.set?.("X-Tenant-Subdomain", subdomain) ||
+        (config.headers["X-Tenant-Subdomain"] = subdomain);
+    } */
+
     const token = JSON.parse(localStorage.getItem("leadpro-auth") || "{}")
       ?.state?.tokens?.accessToken;
 
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers.set?.("Authorization", `Bearer ${token}`) ||
+        (config.headers["Authorization"] = `Bearer ${token}`);
     }
   }
 

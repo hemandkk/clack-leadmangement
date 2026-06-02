@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/select";
 import { formatDate, formatDateTime, formatCurrency } from "@leadpro/utils";
 import { STATUS_CONFIG, SOURCE_CONFIG } from "@/lib/leadConfig";
-import type { LeadStatus } from "@leadpro/types";
+import type { ContactNumber, LeadStatus, Product } from "@leadpro/types";
 
 export function LeadDetailClient({ id }: { id: string }) {
   const router = useRouter();
@@ -74,7 +74,7 @@ export function LeadDetailClient({ id }: { id: string }) {
 
   // Primary phone
   const primaryContact =
-    lead.contactNumbers?.find((c: any) => c.isPrimary) ??
+    lead.contactNumbers?.find((contact: ContactNumber) => contact.isPrimary) ??
     lead.contactNumbers?.[0];
 
   return (
@@ -169,14 +169,14 @@ export function LeadDetailClient({ id }: { id: string }) {
                 lead.contactNumbers ?? [
                   { number: lead.phone, label: "mobile", isPrimary: true },
                 ]
-              ).map((c: any, i: number) => (
+              ).map((contact: ContactNumber, i: number) => (
                 <div key={i} className="flex items-center gap-2">
                   <Phone className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                  <span className="text-sm text-slate-700">{c.number}</span>
+                  <span className="text-sm text-slate-700">{contact.number}</span>
                   <span className="text-xs text-slate-400 capitalize">
-                    {c.label}
+                    {contact.label}
                   </span>
-                  {c.isPrimary && (
+                  {contact.isPrimary && (
                     <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                   )}
                 </div>
@@ -215,16 +215,16 @@ export function LeadDetailClient({ id }: { id: string }) {
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {lead.products!.map((p: any) => (
+                  {lead.products!.map((product: Product) => (
                     <span
-                      key={p.id}
+                      key={product.id}
                       className="text-xs bg-slate-100 text-slate-700
                         px-2 py-0.5 rounded-full border border-slate-200"
                     >
-                      {p.name}
-                      {p.price && (
+                      {product.name}
+                      {product.price && (
                         <span className="text-slate-400 ml-1">
-                          {formatCurrency(p.price)}
+                          {formatCurrency(product.price)}
                         </span>
                       )}
                     </span>

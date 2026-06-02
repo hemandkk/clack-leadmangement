@@ -162,7 +162,11 @@ export function EmailTemplateFormModal({ open, onClose, editId }: Props) {
 
                 <div>
                   <Label>Category *</Label>
-                  <Select onValueChange={(v) => setValue("category", v as any)}>
+                  <Select
+                    onValueChange={(v) =>
+                      setValue("category", v as EmailTemplateInput["category"])
+                    }
+                  >
                     <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>

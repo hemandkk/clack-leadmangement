@@ -39,7 +39,7 @@ export function DonutChart({
           </Pie>
           <Tooltip
             {...tooltipStyle}
-            formatter={(value: number | string | undefined) => {
+            formatter={(value) => {
               if (value === undefined || typeof value !== "number")
                 return ["", ""];
               return [`${value} (${((value / total) * 100).toFixed(1)}%)`, ""];

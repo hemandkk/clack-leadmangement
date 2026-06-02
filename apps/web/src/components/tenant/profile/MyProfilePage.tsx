@@ -6,14 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   updateProfileSchema,
   type UpdateProfileInput,
-  MOBILE_PREFIXES,
 } from "@leadpro/validators";
+import { PHONE_PREFIXES } from "@leadpro/utils";
 import {
   useMyProfile,
   useUpdateMyProfile,
   useChangePassword,
 } from "@/hooks/useStaffManagement";
-import { useAuthStore } from "@/store/authStore";
 import { staffMgmtApi } from "@leadpro/api-client";
 import { PermissionMatrix } from "@/components/tenant/staff/PermissionMatrix";
 import { SettingsCard } from "@/components/tenant/settings/SettingsCard";
@@ -30,6 +29,12 @@ import {
 import { toast } from "sonner";
 import { Camera } from "lucide-react";
 import type { PermissionKey } from "@leadpro/types";
+
+interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
 export function MyProfilePage() {
   const { data, isLoading } = useMyProfile();
@@ -51,7 +56,7 @@ export function MyProfilePage() {
     resolver: zodResolver(updateProfileSchema),
   });
 
-  const pwdForm = useForm({
+  const pwdForm = useForm<ChangePasswordInput>({
     defaultValues: {
       currentPassword: "",
       newPassword: "",
@@ -68,9 +73,8 @@ export function MyProfilePage() {
         designation: profile.designation ?? "",
         department: profile.department ?? "",
       });
-      setAvatarPreview(profile.avatar);
     }
-  }, [profile]);
+  }, [profile, reset]);
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -91,12 +95,12 @@ export function MyProfilePage() {
 
   const onSubmitProfile = (d: UpdateProfileInput) => save(d);
 
-  const onSubmitPassword = (d: any) => {
-    if (d.newPassword !== d.confirmPassword) {
+  const onSubmitPassword = (data: ChangePasswordInput) => {
+    if (data.newPassword !== data.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-    changePwd(d, { onSuccess: () => pwdForm.reset() });
+    changePwd(data, { onSuccess: () => pwdForm.reset() });
   };
 
   if (isLoading) {
@@ -126,8 +130,12 @@ export function MyProfilePage() {
               className="h-20 w-20 rounded-2xl bg-slate-900 flex items-center
               justify-center text-white text-2xl font-bold overflow-hidden"
             >
-              {avatarPreview ? (
-                <img src={avatarPreview} className="h-20 w-20 object-cover" />
+              {avatarPreview ?? profile?.avatar ? (
+                <img
+                  src={avatarPreview ?? profile?.avatar}
+                  alt={`${profile?.name ?? "User"} avatar`}
+                  className="h-20 w-20 object-cover"
+                />
               ) : (
                 profile?.name?.charAt(0).toUpperCase()
               )}
@@ -187,7 +195,7 @@ export function MyProfilePage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {MOBILE_PREFIXES.map((p) => (
+                    {PHONE_PREFIXES.map((p) => (
                       <SelectItem key={p.code} value={p.code}>
                         <span className="font-mono">{p.code}</span>
                         <span className="text-slate-400 ml-2 text-xs">

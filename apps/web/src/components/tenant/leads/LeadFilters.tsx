@@ -11,7 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { LeadFilters as ILeadFilters, LeadStatus } from "@leadpro/types";
+import type {
+  LeadFilters as ILeadFilters,
+  LeadPriority,
+  LeadStatus,
+} from "@leadpro/types";
 import { STATUS_CONFIG } from "@/lib/leadConfig";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useEffect, useState } from "react";
@@ -74,7 +78,11 @@ export function LeadFilters({ filters, onChange }: Props) {
         <Select
           value={filters.priority ?? ""}
           onValueChange={(v) =>
-            onChange({ ...filters, priority: (v || undefined) as any, page: 1 })
+            onChange({
+              ...filters,
+              priority: (v || undefined) as LeadPriority | undefined,
+              page: 1,
+            })
           }
         >
           <SelectTrigger className="h-8 text-sm w-32">

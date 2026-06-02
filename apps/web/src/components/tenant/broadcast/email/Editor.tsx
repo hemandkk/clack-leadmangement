@@ -4,10 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Mention from "@tiptap/extension-mention";
-import Suggestion from "@tiptap/suggestion";
-import { SlashCommand } from "./SlashCommand";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 // Mock users (replace with API later)
 const USERS = [
@@ -17,7 +14,6 @@ const USERS = [
 ];
 
 export function RichTextEditor() {
-  const [query, setQuery] = useState("");
   const [items, setItems] = useState<typeof USERS>([]);
   const [showMenu, setShowMenu] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
@@ -43,8 +39,6 @@ export function RichTextEditor() {
             );
           },
           render: () => {
-            let component: any;
-
             return {
               onStart: (props) => {
                 setShowMenu(true);
@@ -94,18 +88,16 @@ export function RichTextEditor() {
           className="absolute z-50 bg-white border rounded-md shadow-md w-48"
           style={{ top: coords.top + 25, left: coords.left }}
         >
-          {items.map((item: any, i) => (
+          {items.map((item) => (
             <button
-              key={i}
+              key={item.id}
               onClick={() => {
-                if (item.command) item.command({ editor });
-                else
-                  editor.chain().focus().insertContent(`@${item.label} `).run();
+                editor.chain().focus().insertContent(`@${item.label} `).run();
                 setShowMenu(false);
               }}
               className="block w-full text-left px-3 py-2 hover:bg-slate-100 text-sm"
             >
-              {item.label || item.title}
+              {item.label}
             </button>
           ))}
         </div>

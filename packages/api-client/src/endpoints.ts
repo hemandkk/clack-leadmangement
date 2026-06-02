@@ -8,7 +8,12 @@ import type {
   SetupTenantInput,
 } from "@leadpro/validators";
 
-import type { LeadFilters } from "@leadpro/types";
+import type {
+  Lead,
+  LeadActivity,
+  LeadFilters,
+  LeadListResponse,
+} from "@leadpro/types";
 // Auth
 export const authApi = {
   login: (data: LoginInput) => apiClient.post("/auth/login", data),
@@ -18,15 +23,18 @@ export const authApi = {
   register: (data: RegisterInput) => apiClient.post("/auth/register", data),
   verifyOtp: (data: RegisterOTPInput) =>
     apiClient.post("/auth/verify-otp", data),
+  checkSubdomain: (subdomain: string) =>
+    apiClient.get("/auth/check-subdomain", { params: { subdomain } }),
   setupTenant: (data: SetupTenantInput) =>
     apiClient.post("/auth/setup-tenant", data),
 };
 
 // Leads
 export const leadsApi = {
-  list: (filters?: LeadFilters) => apiClient.get("/leads", { params: filters }),
+  list: (filters?: LeadFilters) =>
+    apiClient.get<LeadListResponse>("/leads", { params: filters }),
 
-  get: (id: string) => apiClient.get(`/leads/${id}`),
+  get: (id: string) => apiClient.get<Lead>(`/leads/${id}`),
 
   create: (data: CreateLeadInput) => apiClient.post("/leads", data),
 
@@ -44,7 +52,8 @@ export const leadsApi = {
   addNote: (id: string, note: string) =>
     apiClient.post(`/leads/${id}/notes`, { note }),
 
-  getActivity: (id: string) => apiClient.get(`/leads/${id}/activity`),
+  getActivity: (id: string) =>
+    apiClient.get<LeadActivity[]>(`/leads/${id}/activity`),
 
   bulkAssign: (leadIds: string[], staffId: string) =>
     apiClient.post("/leads/bulk-assign", { leadIds, staffId }),
@@ -52,5 +61,5 @@ export const leadsApi = {
   bulkUpdateStatus: (leadIds: string[], status: string) =>
     apiClient.post("/leads/bulk-status", { leadIds, status }),
 
-  getKanban: () => apiClient.get("/leads/kanban"), // returns leads grouped by status
+  getKanban: () => apiClient.get<{ leads: Lead[] }>("/leads/kanban"),
 };

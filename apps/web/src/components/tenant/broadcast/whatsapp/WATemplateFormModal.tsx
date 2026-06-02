@@ -160,7 +160,9 @@ export function WATemplateFormModal({ open, onClose, editId }: Props) {
                   <div>
                     <Label>Category</Label>
                     <Select
-                      onValueChange={(v) => setValue("category", v as any)}
+                      onValueChange={(v) =>
+                        setValue("category", v as WhatsAppTemplateInput["category"])
+                      }
                     >
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select" />
@@ -187,7 +189,12 @@ export function WATemplateFormModal({ open, onClose, editId }: Props) {
                     <Label>Meta category *</Label>
                     <Select
                       defaultValue="MARKETING"
-                      onValueChange={(v) => setValue("waCategory", v as any)}
+                      onValueChange={(v) =>
+                        setValue(
+                          "waCategory",
+                          v as WhatsAppTemplateInput["waCategory"],
+                        )
+                      }
                     >
                       <SelectTrigger className="mt-1">
                         <SelectValue />
@@ -227,7 +234,12 @@ export function WATemplateFormModal({ open, onClose, editId }: Props) {
                   <Label>Header type</Label>
                   <Select
                     defaultValue="NONE"
-                    onValueChange={(v) => setValue("headerType", v as any)}
+                    onValueChange={(v) =>
+                      setValue(
+                        "headerType",
+                        v as WhatsAppTemplateInput["headerType"],
+                      )
+                    }
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -341,7 +353,12 @@ export function WATemplateFormModal({ open, onClose, editId }: Props) {
                           <Select
                             defaultValue={field.type}
                             onValueChange={(v) =>
-                              setValue(`buttons.${i}.type`, v as any)
+                              setValue(
+                                `buttons.${i}.type`,
+                                v as NonNullable<
+                                  WhatsAppTemplateInput["buttons"]
+                                >[number]["type"],
+                              )
                             }
                           >
                             <SelectTrigger className="h-8 w-32 text-xs shrink-0">

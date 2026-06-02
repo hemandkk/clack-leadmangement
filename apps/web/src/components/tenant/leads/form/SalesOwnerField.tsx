@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import type { Staff } from "@leadpro/types";
 
 export function SalesOwnerField() {
   const { setValue, watch } = useFormContext();
@@ -20,7 +21,7 @@ export function SalesOwnerField() {
   const currentUser = useAuthStore((s) => s.user);
   const { data } = useAssignableStaff();
 
-  const staffList = data?.staff ?? [];
+  const staffList: Staff[] = data?.staff ?? [];
 
   const selected = watch("assignedTo") ?? String(currentUser?.id);
   const canAssign = can("ASSIGN_LEADS"); // managers + owners only
@@ -79,17 +80,17 @@ export function SalesOwnerField() {
 
           {/* Other staff */}
           {staffList
-            .filter((s: any) => s.id !== currentUser?.id)
-            .map((s: any) => (
-              <SelectItem key={s.id} value={String(s.id)}>
+            .filter((staff) => staff.id !== currentUser?.id)
+            .map((staff) => (
+              <SelectItem key={staff.id} value={String(staff.id)}>
                 <div className="flex items-center gap-2">
                   <Avatar className="h-5 w-5">
                     <AvatarFallback className="bg-slate-800 text-white text-[9px]">
-                      {s.name.charAt(0)}
+                      {staff.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <span>{s.name}</span>
-                  {s.isOnLeave && (
+                  <span>{staff.name}</span>
+                  {staff.isOnLeave && (
                     <span className="text-[10px] text-orange-500 ml-1">
                       On leave
                     </span>

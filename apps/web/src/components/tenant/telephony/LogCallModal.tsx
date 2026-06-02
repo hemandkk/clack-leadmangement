@@ -21,6 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type {
+  CallDirection,
+  CallOutcome,
+  CallStatus,
+  Lead,
+  LogCallInput,
+} from "@leadpro/types";
 
 interface Props {
   open: boolean;
@@ -31,7 +38,7 @@ export function LogCallModal({ open, onClose }: Props) {
   const currentUser = useAuthStore((s) => s.user);
   const { mutate: log, isPending } = useLogCall();
   const { data: leadsData } = useLeadsList({ page: 1, perPage: 100 });
-  const leads = leadsData?.data ?? [];
+  const leads: Lead[] = leadsData?.data ?? [];
 
   const {
     register,
@@ -39,8 +46,9 @@ export function LogCallModal({ open, onClose }: Props) {
     setValue,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<LogCallInput>({
     defaultValues: {
+      leadId: undefined,
       direction: "outbound",
       status: "answered",
       duration: 0,
@@ -50,8 +58,8 @@ export function LogCallModal({ open, onClose }: Props) {
     },
   });
 
-  const onSubmit = (d: any) =>
-    log(d, {
+  const onSubmit = (data: LogCallInput) =>
+    log(data, {
       onSuccess: () => {
         reset();
         onClose();
@@ -73,9 +81,9 @@ export function LogCallModal({ open, onClose }: Props) {
                 <SelectValue placeholder="Select lead (optional)" />
               </SelectTrigger>
               <SelectContent>
-                {leads.map((l: any) => (
-                  <SelectItem key={l.id} value={l.id}>
-                    {l.name} — {l.phone}
+                {leads.map((lead) => (
+                  <SelectItem key={lead.id} value={lead.id}>
+                    {lead.name} — {lead.phone}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -87,7 +95,9 @@ export function LogCallModal({ open, onClose }: Props) {
               <Label>Direction</Label>
               <Select
                 defaultValue="outbound"
-                onValueChange={(v) => setValue("direction", v)}
+                onValueChange={(v) =>
+                  setValue("direction", v as CallDirection)
+                }
               >
                 <SelectTrigger className="mt-1">
                   <SelectValue />
@@ -102,7 +112,7 @@ export function LogCallModal({ open, onClose }: Props) {
               <Label>Status</Label>
               <Select
                 defaultValue="answered"
-                onValueChange={(v) => setValue("status", v)}
+                onValueChange={(v) => setValue("status", v as CallStatus)}
               >
                 <SelectTrigger className="mt-1">
                   <SelectValue />
@@ -130,7 +140,9 @@ export function LogCallModal({ open, onClose }: Props) {
             </div>
             <div>
               <Label>Outcome</Label>
-              <Select onValueChange={(v) => setValue("outcome", v)}>
+              <Select
+                onValueChange={(v) => setValue("outcome", v as CallOutcome)}
+              >
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>

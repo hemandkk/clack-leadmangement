@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { telephonyApi } from "@leadpro/api-client";
-import type { CallFilters } from "@leadpro/types";
+import type { CallFilters, LogCallInput } from "@leadpro/types";
 
 export const telephonyKeys = {
   calls: (f?: unknown) => ["calls", "list", f] as const,
@@ -37,7 +37,7 @@ export const useCallStats = (p?: unknown) =>
 export function useLogCall() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (d: unknown) => telephonyApi.logCall(d),
+    mutationFn: (data: LogCallInput) => telephonyApi.logCall(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["calls"] });
       toast.success("Call logged");

@@ -1,4 +1,5 @@
 import { apiClient } from "./client";
+import type { WhatsAppTemplate } from "@leadpro/types";
 
 export const broadcastApi = {
   // ── Email templates ────────────────────────────────
@@ -19,7 +20,9 @@ export const broadcastApi = {
   listWATemplates: (p?: unknown) =>
     apiClient.get("/broadcast/templates/whatsapp", { params: p }),
   getWATemplate: (id: string) =>
-    apiClient.get(`/broadcast/templates/whatsapp/${id}`),
+    apiClient.get<{ template: WhatsAppTemplate }>(
+      `/broadcast/templates/whatsapp/${id}`,
+    ),
   createWATemplate: (d: unknown) =>
     apiClient.post("/broadcast/templates/whatsapp", d),
   updateWATemplate: (id: string, d: unknown) =>

@@ -25,6 +25,7 @@ import {
   PhoneIncoming,
   PhoneOutgoing,
   PhoneMissed,
+  Phone,
   Play,
   Plus,
   Search,
@@ -32,7 +33,12 @@ import {
 } from "lucide-react";
 import { cn, formatDate } from "@leadpro/utils";
 import { formatDuration } from "@/lib/staffConfig";
-import type { CallRecord, CallDirection, CallStatus } from "@leadpro/types";
+import type {
+  CallRecord,
+  CallDirection,
+  CallStatus,
+  Staff,
+} from "@leadpro/types";
 
 const DIRECTION_CFG: Record<
   CallDirection,
@@ -176,9 +182,9 @@ export function CallLogsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All staff</SelectItem>
-              {(staffData?.data ?? []).map((s: any) => (
-                <SelectItem key={s.id} value={s.id}>
-                  {s.name}
+              {(staffData?.data ?? []).map((staff: Staff) => (
+                <SelectItem key={staff.id} value={staff.id}>
+                  {staff.name}
                 </SelectItem>
               ))}
             </SelectContent>

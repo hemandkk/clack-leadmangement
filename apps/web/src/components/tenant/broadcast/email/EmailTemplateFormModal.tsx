@@ -13,7 +13,13 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { RichTextEditor } from "./Editor";
 
-export function EmailTemplateFormModal({ open, onClose }: any) {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  editId?: string | null;
+}
+
+export function EmailTemplateFormModal({ open, onClose }: Props) {
   const methods = useForm();
 
   return (

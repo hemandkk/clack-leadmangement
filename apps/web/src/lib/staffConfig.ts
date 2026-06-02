@@ -16,6 +16,7 @@ export const ROLE_CONFIG: Record<
     color: "bg-slate-100",
     text: "text-slate-600",
   },
+  custom: { label: "Custom", color: "bg-amber-50", text: "text-amber-700" },
 };
 
 export const STAFF_STATUS_CONFIG: Record<

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { authApi } from "@leadpro/api-client";
@@ -11,9 +10,10 @@ import { OnboardingStep } from "./registerSteps/OnboardingStep";
 import { useRegisterStore } from "@/store/registerStore";
 import {
   type RegisterInput,
-  RegisterOTPInput,
-  SetupTenantInput,
+  type RegisterOTPInput,
+  type SetupTenantInput,
 } from "@leadpro/validators";
+import { getApiErrorMessage } from "@/lib/apiError";
 export function RegisterFormShell() {
   const router = useRouter();
   const {
@@ -35,8 +35,8 @@ export function RegisterFormShell() {
       setStep(RegisterStep.VERIFY_OTP);
 
       toast.success("OTP sent successfully");
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Register failed");
+    } catch (error: unknown) {
+      toast.error(getApiErrorMessage(error, "Register failed"));
     }
   };
 
@@ -46,8 +46,8 @@ export function RegisterFormShell() {
       const res = await authApi.verifyOtp(data);
       setOnboardingToken(res.data.onboarding_token);
       setStep(RegisterStep.ONBOARD);
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Invalid OTP");
+    } catch (error: unknown) {
+      toast.error(getApiErrorMessage(error, "Invalid OTP"));
     }
   };
 
@@ -56,8 +56,8 @@ export function RegisterFormShell() {
       const res = await authApi.verifyOtp(data);
       setOnboardingToken(res.data.onboarding_token);
       setStep(RegisterStep.ONBOARD);
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Invalid OTP");
+    } catch (error: unknown) {
+      toast.error(getApiErrorMessage(error, "Unable to resend OTP"));
     }
   };
 
@@ -68,13 +68,13 @@ export function RegisterFormShell() {
       toast.success("Account setup complete");
       // Redirect to subdomain login
       router.push(`https://${data.subdomain}.yourdomain.com/login`);
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Onboarding failed");
+    } catch (error: unknown) {
+      toast.error(getApiErrorMessage(error, "Onboarding failed"));
     }
   };
-  if (step === RegisterStep.ONBOARD && !onboardingToken) {
+  /* if (step === RegisterStep.ONBOARD && !onboardingToken) {
     setStep(RegisterStep.REGISTER);
-  }
+  } */
   return (
     <>
       {step === RegisterStep.REGISTER && (

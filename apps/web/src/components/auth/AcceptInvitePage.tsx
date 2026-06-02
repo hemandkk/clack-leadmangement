@@ -14,18 +14,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, Eye, EyeOff } from "lucide-react";
+import type { UserRole } from "@leadpro/types";
 
 interface Props {
   token: string;
+}
+
+interface InviteInfo {
+  tenantName?: string;
+  name: string;
+  email: string;
+  role: UserRole;
 }
 
 export function AcceptInvitePage({ token }: Props) {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
 
-  const [inviteInfo, setInviteInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [invalid, setInvalid] = useState(false);
+  const [inviteInfo, setInviteInfo] = useState<InviteInfo | null>(null);
+  const [loading, setLoading] = useState(Boolean(token));
+  const [invalid, setInvalid] = useState(!token);
   const [done, setDone] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
 
@@ -40,8 +48,6 @@ export function AcceptInvitePage({ token }: Props) {
 
   useEffect(() => {
     if (!token) {
-      setInvalid(true);
-      setLoading(false);
       return;
     }
     staffMgmtApi
@@ -59,7 +65,7 @@ export function AcceptInvitePage({ token }: Props) {
   const onSubmit = async (data: AcceptInviteInput) => {
     const res = await staffMgmtApi.acceptInvite(data);
     const { user, tokens, features } = res.data;
-    await setAuth(user, tokens.accessToken, features ?? {});
+    setAuth(user, tokens, features ?? {});
     // Set cookies
     document.cookie = `access_token=${tokens.accessToken}; path=/`;
     document.cookie = `user_role=${user.role}; path=/`;
@@ -141,7 +147,7 @@ export function AcceptInvitePage({ token }: Props) {
                 {inviteInfo.tenantName}
               </p>
               <p className="text-xs text-blue-600">
-                You've been invited to join
+                You&apos;ve been invited to join
               </p>
             </div>
           </div>
@@ -242,7 +248,6 @@ export function AcceptInvitePage({ token }: Props) {
                 test: (p: string) => /[0-9]/.test(p),
               },
             ].map((rule) => {
-              const pwd = register("password");
               return (
                 <p
                   key={rule.label}

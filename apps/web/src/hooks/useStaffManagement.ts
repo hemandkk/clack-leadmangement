@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { staffMgmtApi } from "@leadpro/api-client";
+import { getApiErrorMessage } from "@/lib/apiError";
 
 export const staffMgmtKeys = {
   all: () => ["staff-mgmt"] as const,
@@ -38,8 +39,8 @@ export function useInviteStaff() {
       qc.invalidateQueries({ queryKey: staffMgmtKeys.all() });
       toast.success("Invite sent successfully");
     },
-    onError: (e: any) =>
-      toast.error(e?.response?.data?.message ?? "Failed to send invite"),
+    onError: (error: unknown) =>
+      toast.error(getApiErrorMessage(error, "Failed to send invite")),
   });
 }
 
@@ -103,7 +104,7 @@ export function useChangePassword() {
   return useMutation({
     mutationFn: (d: unknown) => staffMgmtApi.changePassword(d),
     onSuccess: () => toast.success("Password changed successfully"),
-    onError: (e: any) =>
-      toast.error(e?.response?.data?.message ?? "Failed to change password"),
+    onError: (error: unknown) =>
+      toast.error(getApiErrorMessage(error, "Failed to change password")),
   });
 }

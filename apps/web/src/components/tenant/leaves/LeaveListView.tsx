@@ -25,7 +25,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { formatDate } from "@leadpro/utils";
-import type { Leave, LeaveFilters, LeaveStatus } from "@leadpro/types";
+import type {
+  Leave,
+  LeaveFilters,
+  LeaveStatus,
+  LeaveType,
+} from "@leadpro/types";
 
 interface Props {
   filters: LeaveFilters;
@@ -72,7 +77,7 @@ export function LeaveListView({ filters, onFiltersChange, isManager }: Props) {
           onValueChange={(v) =>
             onFiltersChange({
               ...filters,
-              type: v === "all" ? undefined : (v as any),
+              type: v === "all" ? undefined : (v as LeaveType),
               page: 1,
             })
           }
@@ -137,7 +142,7 @@ export function LeaveListView({ filters, onFiltersChange, isManager }: Props) {
                   )}
                 </p>
                 <p className="text-xs text-slate-400 mt-0.5 italic">
-                  "{leave.reason}"
+                  &quot;{leave.reason}&quot;
                 </p>
                 {leave.status === "rejected" && leave.rejectionReason && (
                   <p className="text-xs text-red-500 mt-1">

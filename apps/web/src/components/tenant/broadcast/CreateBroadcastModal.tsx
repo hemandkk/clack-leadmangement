@@ -27,7 +27,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { TemplateChannel } from "@leadpro/types";
+import type {
+  AnyTemplate,
+  EmailTemplate,
+  TemplateChannel,
+  WhatsAppTemplate,
+} from "@leadpro/types";
 
 interface Props {
   open: boolean;
@@ -42,10 +47,12 @@ export function CreateBroadcastModal({ open, onClose }: Props) {
   const { data: waTpls } = useWATemplates();
   const { data: leadsData } = useLeadsList({ page: 1, perPage: 200 });
 
-  const templates =
+  const templates: AnyTemplate[] =
     channel === "email"
-      ? (emailTpls?.templates ?? [])
-      : (waTpls?.templates ?? []).filter((t: any) => t.status === "approved");
+      ? ((emailTpls?.templates ?? []) as EmailTemplate[])
+      : ((waTpls?.templates ?? []) as WhatsAppTemplate[]).filter(
+          (template) => template.status === "approved",
+        );
 
   const {
     register,
@@ -133,12 +140,12 @@ export function CreateBroadcastModal({ open, onClose }: Props) {
                         Create one first.
                       </div>
                     ) : (
-                      templates.map((t: any) => (
-                        <SelectItem key={t.id} value={t.id}>
-                          {t.name}
-                          {t.status && (
+                      templates.map((template) => (
+                        <SelectItem key={template.id} value={template.id}>
+                          {template.name}
+                          {template.status && (
                             <span className="ml-2 text-slate-400 text-xs capitalize">
-                              ({t.status})
+                              ({template.status})
                             </span>
                           )}
                         </SelectItem>
@@ -158,7 +165,9 @@ export function CreateBroadcastModal({ open, onClose }: Props) {
                 <Label>Audience *</Label>
                 <Select
                   defaultValue="all"
-                  onValueChange={(v) => setValue("audienceType", v as any)}
+                  onValueChange={(v) =>
+                    setValue("audienceType", v as BroadcastInput["audienceType"])
+                  }
                 >
                   <SelectTrigger className="mt-1">
                     <SelectValue />

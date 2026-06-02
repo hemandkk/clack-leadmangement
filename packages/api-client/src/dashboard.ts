@@ -1,12 +1,24 @@
 import { apiClient } from "./client";
+import type {
+  DashboardPeriod,
+  StaffDashboardData,
+  SuperAdminDashboardData,
+  TenantDashboardData,
+} from "@leadpro/types";
 
 export const dashboardApi = {
-  getTenantDashboard: (period: string) =>
-    apiClient.get("/dashboard/tenant", { params: { period } }),
+  getTenantDashboard: (period: DashboardPeriod) =>
+    apiClient.get<TenantDashboardData>("/dashboard/tenant", {
+      params: { period },
+    }),
 
-  getStaffDashboard: (period: string) =>
-    apiClient.get("/dashboard/staff", { params: { period } }),
+  getStaffDashboard: (period: DashboardPeriod) =>
+    apiClient.get<StaffDashboardData>("/dashboard/staff", {
+      params: { period },
+    }),
 
-  getSuperAdminDashboard: (period: string) =>
-    apiClient.get("/dashboard/super-admin", { params: { period } }),
+  getSuperAdminDashboard: (period: DashboardPeriod) =>
+    apiClient.get<SuperAdminDashboardData>("/dashboard/super-admin", {
+      params: { period },
+    }),
 };

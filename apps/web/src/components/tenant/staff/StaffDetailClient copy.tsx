@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@leadpro/utils";
-import { MOBILE_PREFIXES } from "@leadpro/validators";
+import { PHONE_PREFIXES } from "@leadpro/utils";
 import type { PermissionKey, StaffRole } from "@leadpro/types";
 
 const ROLE_CFG = {
@@ -111,7 +111,7 @@ export function StaffDetailPage({ id }: { id: string }) {
     );
   }
 
-  const rc = ROLE_CFG[member.role] ?? ROLE_CFG.custom;
+  const rc = ROLE_CFG[member.role as StaffRole] ?? ROLE_CFG.custom;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -241,7 +241,7 @@ export function StaffDetailPage({ id }: { id: string }) {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {MOBILE_PREFIXES.map((p) => (
+                        {PHONE_PREFIXES.map((p) => (
                           <SelectItem key={p.code} value={p.code}>
                             <span className="font-mono">{p.code}</span>
                             <span className="text-slate-400 ml-2 text-xs">

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@leadpro/utils";
 import { PHONE_PREFIXES } from "@leadpro/utils";
+import type { ContactNumberInput, CreateLeadInput } from "@leadpro/validators";
 const LABELS = [
   { value: "mobile", label: "📱 Mobile" },
   { value: "work", label: "🏢 Work" },
@@ -27,7 +28,7 @@ export function ContactNumbersField() {
     setValue,
     watch,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<CreateLeadInput>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -88,7 +89,7 @@ export function ContactNumbersField() {
       <div className="space-y-2">
         {fields.map((field, idx) => {
           const isPrimary = watchNumbers[idx]?.isPrimary;
-          const error = (errors as any)?.contactNumbers?.[idx]?.number?.message;
+          const error = errors.contactNumbers?.[idx]?.number?.message;
 
           return (
             <div key={field.id}>
@@ -121,9 +122,13 @@ export function ContactNumbersField() {
                 <Select
                   defaultValue={watchNumbers[idx]?.label ?? "mobile"}
                   onValueChange={(v) =>
-                    setValue(`contactNumbers.${idx}.label`, v, {
+                    setValue(
+                      `contactNumbers.${idx}.label`,
+                      v as ContactNumberInput["label"],
+                      {
                       shouldDirty: true,
-                    })
+                      },
+                    )
                   }
                 >
                   <SelectTrigger
@@ -147,9 +152,9 @@ export function ContactNumbersField() {
 
                 {/* Prefix select */}
                 <Select
-                  defaultValue={watchNumbers[idx]?.code ?? "+91"}
+                  defaultValue={watchNumbers[idx]?.mobile_prefix ?? "+91"}
                   onValueChange={(v) =>
-                    setValue(`contactNumbers.${idx}.code`, v, {
+                    setValue(`contactNumbers.${idx}.mobile_prefix`, v, {
                       shouldDirty: true,
                     })
                   }
@@ -221,14 +226,14 @@ export function ContactNumbersField() {
       </div>
 
       {/* Root-level error */}
-      {(errors as any)?.contactNumbers?.root?.message && (
+      {errors.contactNumbers?.root?.message && (
         <p className="text-red-500 text-xs">
-          {(errors as any).contactNumbers.root.message}
+          {errors.contactNumbers.root.message}
         </p>
       )}
-      {typeof (errors as any)?.contactNumbers?.message === "string" && (
+      {typeof errors.contactNumbers?.message === "string" && (
         <p className="text-red-500 text-xs">
-          {(errors as any).contactNumbers.message}
+          {errors.contactNumbers.message}
         </p>
       )}
     </div>

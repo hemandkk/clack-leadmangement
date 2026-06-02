@@ -7,7 +7,7 @@ import {
 import { toast } from "sonner";
 import { leadsApi } from "@leadpro/api-client";
 import type { LeadFilters } from "@leadpro/types";
-import type { UpdateLeadInput } from "@leadpro/validators";
+import type { CreateLeadInput, UpdateLeadInput } from "@leadpro/validators";
 
 // ─── Query keys ────────────────────────────────────────────
 export const leadKeys = {
@@ -68,7 +68,7 @@ export function useLeadActivity(id: string) {
 export function useCreateLead() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: unknown) => leadsApi.create(data as any),
+    mutationFn: (data: CreateLeadInput) => leadsApi.create(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: leadKeys.all() });
       toast.success("Lead created successfully");

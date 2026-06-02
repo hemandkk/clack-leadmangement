@@ -38,6 +38,16 @@ export interface CallRecord {
   createdAt: string;
 }
 
+export interface LogCallInput {
+  leadId?: string;
+  staffId?: string;
+  direction: CallDirection;
+  status: CallStatus;
+  duration: number;
+  outcome?: CallOutcome | "";
+  notes?: string;
+}
+
 export interface CallFilters {
   staffId?: string;
   leadId?: string;

@@ -14,10 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatCurrency } from "@leadpro/utils";
-import type { StaffTarget } from "@leadpro/types";
+import type { StaffTarget, TargetPeriod } from "@leadpro/types";
 
 export function StaffTargetsTab({ staffId }: { staffId: string }) {
-  const [period, setPeriod] = useState("monthly");
+  const [period, setPeriod] = useState<TargetPeriod>("monthly");
   const [showSet, setShowSet] = useState(false);
   const { data: targets, isLoading } = useStaffTargets(staffId, { period });
 
@@ -26,7 +26,10 @@ export function StaffTargetsTab({ staffId }: { staffId: string }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Select value={period} onValueChange={setPeriod}>
+        <Select
+          value={period}
+          onValueChange={(value) => setPeriod(value as TargetPeriod)}
+        >
           <SelectTrigger className="h-8 w-32 text-sm">
             <SelectValue />
           </SelectTrigger>
@@ -117,7 +120,7 @@ export function StaffTargetsTab({ staffId }: { staffId: string }) {
         staffId={staffId}
         open={showSet}
         onClose={() => setShowSet(false)}
-        defaultPeriod={period as any}
+        defaultPeriod={period}
       />
     </div>
   );

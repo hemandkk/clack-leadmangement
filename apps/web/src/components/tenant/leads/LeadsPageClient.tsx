@@ -25,17 +25,20 @@ export function LeadsPageClient() {
   return (
     <div className="space-y-4">
       {/* Header */}
+      <div>
+        <h1 className="text-xl font-semibold text-slate-900">Leads</h1>
+        <p className="text-sm text-slate-500 mt-0.5">
+          Manage and track your leads
+        </p>
+      </div>
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-900">Leads</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Manage and track your leads
-          </p>
+        <div className="">
+          <input placeholder="Search.." />
         </div>
         <div className="flex items-center gap-2">
           {/* View toggle */}
           <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-white">
-            {(["kanban", "table"] as ViewMode[]).map((v) => (
+            {([/* "kanban", */ "table"] as ViewMode[]).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}

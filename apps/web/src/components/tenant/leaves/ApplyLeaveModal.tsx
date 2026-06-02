@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { differenceInBusinessDays, parseISO } from "date-fns";
-import { useState } from "react";
+import type { LeaveBalance, LeaveType } from "@leadpro/types";
 
 interface Props {
   open: boolean;
@@ -76,7 +76,7 @@ export function ApplyLeaveModal({ open, onClose }: Props) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">
           <div>
             <Label>Leave type *</Label>
-            <Select onValueChange={(v) => setValue("type", v as any)}>
+            <Select onValueChange={(v) => setValue("type", v as LeaveType)}>
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Select leave type" />
               </SelectTrigger>
@@ -88,9 +88,8 @@ export function ApplyLeaveModal({ open, onClose }: Props) {
                   { value: "earned", label: "Earned leave" },
                   { value: "unpaid", label: "Unpaid leave" },
                 ].map((opt) => {
-                  const bal = balance?.[
-                    opt.value as keyof typeof balance
-                  ] as any;
+                  const bal =
+                    balance?.[opt.value as keyof Omit<LeaveBalance, "staffId">];
                   return (
                     <SelectItem key={opt.value} value={opt.value}>
                       <div className="flex items-center justify-between w-full gap-6">
