@@ -95,12 +95,10 @@ export interface LeadFilters {
 
 export interface LeadListResponse {
   data: Lead[];
-  meta: {
-    total: number;
-    perPage: number;
-    currentPage: number;
-    lastPage: number;
-  };
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
 }
 
 // Kanban column definition

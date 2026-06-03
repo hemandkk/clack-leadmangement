@@ -89,7 +89,7 @@ export function LeadFilters({ filters, onChange }: Props) {
             <SelectValue placeholder="Priority" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All priorities</SelectItem>
+            <SelectItem value="d">All priorities</SelectItem>
             <SelectItem value="high">High</SelectItem>
             <SelectItem value="medium">Medium</SelectItem>
             <SelectItem value="low">Low</SelectItem>
@@ -156,3 +156,39 @@ export function LeadFilters({ filters, onChange }: Props) {
     </div>
   );
 }
+/* {filtersOpen && (
+  <Card className="p-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+      <SourceFilter />
+
+      <TypeFilter />
+
+      <PriorityFilter />
+
+      <StatusFilter />
+
+      <AssignedFilter />
+
+      <SortFieldFilter />
+
+      <SortDirectionFilter />
+
+    </div>
+
+    <div className="flex justify-end gap-2 mt-4">
+      <Button
+        variant="outline"
+        onClick={resetFilters}
+      >
+        Reset
+      </Button>
+
+      <Button
+        onClick={() => setFiltersOpen(false)}
+      >
+        Apply
+      </Button>
+    </div>
+  </Card>
+)} */

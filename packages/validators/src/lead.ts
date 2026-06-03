@@ -12,6 +12,8 @@ export const contactNumberSchema = z.object({
 export const createLeadSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email").optional().or(z.literal("")),
+  company_name: z.string().optional().or(z.literal("")),
+  address: z.string().optional().or(z.literal("")),
   //phone: z.string().min(10, "Enter a valid phone number"),
   // Contact numbers — at least one required
   contactNumbers: z

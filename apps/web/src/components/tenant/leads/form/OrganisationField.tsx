@@ -53,9 +53,6 @@ export function OrganisationField() {
     <div className="space-y-1.5">
       <label className="text-sm font-semibold text-slate-700">
         Organisation
-        <span className="ml-1 text-xs font-normal text-slate-400">
-          (optional)
-        </span>
       </label>
 
       {/* Selected state */}

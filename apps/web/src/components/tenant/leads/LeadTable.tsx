@@ -56,7 +56,12 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
   const [rowSelection, setRowSelection] = useState({});
   console.log("API DATA:", data);
   const leads: Lead[] = data?.data ?? [];
-  const meta = data?.meta;
+  const meta = {
+    total: data?.total ?? 0,
+    lastPage: data?.last_page ?? 0,
+    currentPage: data?.current_page ?? 0,
+    perPage: data?.per_page ?? 0,
+  };
 
   const columns: ColumnDef<Lead>[] = [
     {

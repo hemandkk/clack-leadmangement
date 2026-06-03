@@ -36,7 +36,7 @@ export function TopBar() {
         <Bell className="h-4 w-4" />
       </Button>
       <Avatar className="h-8 w-8">
-        <AvatarFallback className="text-xs bg-slate-900 text-white">
+        <AvatarFallback className="text-xs bg-primary text-white">
           {user?.name?.charAt(0).toUpperCase() ?? "U"}
         </AvatarFallback>
       </Avatar>

@@ -7,8 +7,9 @@ import { cn } from "@leadpro/utils";
 import { LeadFilters } from "./LeadFilters";
 import { LeadKanban } from "./LeadKanban";
 import { LeadTable } from "./LeadTable";
-import { CreateLeadModal } from "./CreateLeadModal";
+
 import type { LeadFilters as ILeadFilters } from "@leadpro/types";
+import { CreateLeadSheet } from "./CreateLeadSheet";
 
 type ViewMode = "kanban" | "table";
 
@@ -20,6 +21,12 @@ export function LeadsPageClient() {
     perPage: 25,
     sortBy: "createdAt",
     sortDir: "desc",
+    search: "",
+    source: undefined,
+    type: undefined,
+    priority: undefined,
+    status: [],
+    assignedTo: undefined,
   });
 
   return (
@@ -35,6 +42,9 @@ export function LeadsPageClient() {
         <div className="">
           <input placeholder="Search.." />
         </div>
+
+        {/* Filters */}
+        <LeadFilters filters={filters} onChange={setFilters} />
         <div className="flex items-center gap-2">
           {/* View toggle */}
           <div className="flex items-center border border-slate-200 rounded-lg p-0.5 bg-white">
@@ -73,9 +83,6 @@ export function LeadsPageClient() {
         </div>
       </div>
 
-      {/* Filters */}
-      {/*  <LeadFilters filters={filters} onChange={setFilters} /> */}
-
       {/* Content */}
       {view === "kanban" ? (
         <LeadKanban filters={filters} />
@@ -83,8 +90,8 @@ export function LeadsPageClient() {
         <LeadTable filters={filters} onFiltersChange={setFilters} />
       )}
 
-      {/* Create modal */}
-      <CreateLeadModal open={showCreate} onClose={() => setCreate(false)} />
+      {/* Create lead Drawer */}
+      <CreateLeadSheet open={showCreate} onClose={() => setCreate(false)} />
     </div>
   );
 }
