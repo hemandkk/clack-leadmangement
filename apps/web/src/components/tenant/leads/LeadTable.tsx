@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, Dispatch, SetStateAction, memo } from "react";
 import {
+  RowSelectionState,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -45,16 +46,23 @@ import type { Lead, LeadFilters } from "@leadpro/types";
 interface Props {
   filters: LeadFilters;
   onFiltersChange: (f: LeadFilters) => void;
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
+  rowSelection: RowSelectionState;
 }
 
-export function LeadTable({ filters, onFiltersChange }: Props) {
+function LeadTable({
+  filters,
+  onFiltersChange,
+  setRowSelection,
+  rowSelection,
+}: Props) {
   const memoFilters = useMemo(() => filters, [filters.page, filters.search]);
   const router = useRouter();
   const { data, isLoading } = useLeadsList(memoFilters);
+
   const { mutate: deleteLead } = useDeleteLead();
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [rowSelection, setRowSelection] = useState({});
-  console.log("API DATA:", data);
+
   const leads: Lead[] = data?.data ?? [];
   const meta = {
     total: data?.total ?? 0,
@@ -68,6 +76,7 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
       id: "select",
       header: ({ table }) => (
         <Checkbox
+          className="bg-gray-500/40"
           checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
         />
@@ -75,6 +84,7 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
+          className="bg-gray-500/40"
           onCheckedChange={(v) => row.toggleSelected(!!v)}
           onClick={(e) => e.stopPropagation()}
         />
@@ -209,6 +219,7 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
     manualPagination: true,
     manualSorting: true,
     pageCount: meta?.lastPage ?? 1,
+    getRowId: (row) => row.id,
   });
 
   if (isLoading) {
@@ -223,29 +234,6 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
 
   return (
     <div className="space-y-3">
-      {/* Bulk actions bar */}
-      {Object.keys(rowSelection).length > 0 && (
-        <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
-          <span className="text-sm text-blue-700 font-medium">
-            {Object.keys(rowSelection).length} selected
-          </span>
-          <Button variant="outline" size="sm" className="h-7 text-xs ml-2">
-            Assign to staff
-          </Button>
-          <Button variant="outline" size="sm" className="h-7 text-xs">
-            Update status
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-7 text-xs text-red-600 ml-auto"
-            onClick={() => setRowSelection({})}
-          >
-            Clear
-          </Button>
-        </div>
-      )}
-
       {/* Table */}
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
         <Table>
@@ -361,3 +349,4 @@ export function LeadTable({ filters, onFiltersChange }: Props) {
     </div>
   );
 }
+export default memo(LeadTable);
