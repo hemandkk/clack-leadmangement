@@ -76,7 +76,7 @@ export function StaffLeavesTab({ staffId }: { staffId: string }) {
                     {formatDate(leave.fromDate)} → {formatDate(leave.toDate)}
                   </p>
                   <p className="text-xs text-slate-400 italic">
-                    "{leave.reason}"
+                    {leave.reason}
                   </p>
                 </div>
 

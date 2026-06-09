@@ -52,7 +52,7 @@ export function WhatsAppSettingsPage() {
               WhatsApp Business
             </p>
             <p className="text-xs text-slate-400">
-              Connect via Meta&apos;s Cloud API (no hardware required)
+              Connect via Meta&#39;s Cloud API (no hardware required)
             </p>
           </div>
           <div className="ml-auto">

@@ -35,7 +35,7 @@ export function StaffDashboard() {
             Hey, {user?.name?.split(" ")[0]} 👋
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            Here's how you're doing
+            Here&#39s how you&#39re doing
           </p>
         </div>
         <PeriodSelector value={period} onChange={setPeriod} />

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -147,7 +148,7 @@ export function AcceptInvitePage({ token }: Props) {
                 {inviteInfo.tenantName}
               </p>
               <p className="text-xs text-blue-600">
-                You&apos;ve been invited to join
+                You&#39;ve been invited to join
               </p>
             </div>
           </div>
