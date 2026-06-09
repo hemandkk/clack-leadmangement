@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { CirclePlus, FileOutput, ChevronDown, ListFilter } from "lucide-react";
+import {
+  CirclePlus,
+  FileOutput,
+  ChevronDown,
+  ListFilter,
+  Search,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@leadpro/utils";
 import { LeadFilters } from "./LeadFilters";
@@ -9,6 +15,7 @@ import LeadTable from "./LeadTable";
 
 import type { LeadFilters as ILeadFilters } from "@leadpro/types";
 import { CreateLeadSheet } from "./CreateLeadSheet";
+import { BulkActionsBar } from "./BulkActionBar";
 
 import { useDebounceSearch } from "@/components/shared/DebounceSearch";
 
@@ -17,7 +24,9 @@ type ViewMode = "kanban" | "table";
 export function LeadsPageClient() {
   const [view, setView] = useState<ViewMode>("table");
   const [showCreate, setCreate] = useState(false);
+  const [showBulkAction, setBulkAction] = useState(false);
   const [showImport, setImport] = useState(false);
+
   const [showFilterView, setFilterView] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,19 +72,20 @@ export function LeadsPageClient() {
         </p>
       </div>
       <div className="flex items-center justify-between">
-        <div className="">
+        <div className="relative ">
           <input
             value={searchTerm}
             onChange={handleInputChange}
             placeholder="Search.."
           />
+          <Search className="absolute h-4 w-4 mr-1.5 right-0 top-1" />
         </div>
         {/* Bulk actions bar */}
         {Object.keys(rowSelection).length > 0 && (
           <div className="flex items-center gap-2">
             <Button
               className="bg-black/80 cursor-pointer"
-              onClick={() => setCreate(true)}
+              onClick={() => setBulkAction(true)}
               size="sm"
             >
               More Actions
@@ -107,7 +117,7 @@ export function LeadsPageClient() {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            className="bg-red-500 cursor-pointer"
+            className="bg-primary/80 cursor-pointer py-4 px-3"
             onClick={() => setCreate(true)}
             size="sm"
           >
@@ -116,9 +126,7 @@ export function LeadsPageClient() {
           </Button>
         </div>
       </div>
-
       {/* Content */}
-
       <LeadTable
         filters={effectiveFilters}
         onFiltersChange={setFilters}
@@ -134,6 +142,10 @@ export function LeadsPageClient() {
       />
       {/* Create lead Drawer */}
       <CreateLeadSheet open={showCreate} onClose={() => setCreate(false)} />
+      <BulkActionsBar
+        open={showBulkAction}
+        onClose={() => setBulkAction(false)}
+      />
     </div>
   );
 }

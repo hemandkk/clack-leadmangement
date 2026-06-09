@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build
+
+      - name: Run tests
+        run: npm run eslint && npm run lint
+
+  # mobile-build:
+  #  runs-on: ubuntu-latest
+  #  strategy:
+  #    matrix:
+  #     flavor: [admin, user, driver, guest]
+  #steps:
+  #- uses: actions/checkout@v4
+
+  #- uses: pnpm/action-setup@v2
+  #with:
+  #version: 9
+
+  #- run: pnpm install
+
+  #- name: Build mobile flavor
+  #run: pnpm --dir apps/mobile run build:${{ matrix.flavor }}
