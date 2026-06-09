@@ -29,6 +29,10 @@ interface InviteInfo {
 }
 
 export function AcceptInvitePage({ token }: Props) {
+  function setCookie(name: string, value: string) {
+    document.cookie = `${name}=${value}; path=/`;
+  }
+
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
 
@@ -68,9 +72,14 @@ export function AcceptInvitePage({ token }: Props) {
     const { user, tokens, features } = res.data;
     setAuth(user, tokens, features ?? {});
     // Set cookies
-    document.cookie = `access_token=${tokens.accessToken}; path=/`;
-    document.cookie = `user_role=${user.role}; path=/`;
-    if (user.tenantId) document.cookie = `tenant_id=${user.tenantId}; path=/`;
+
+    setCookie("access_token", tokens.accessToken);
+    setCookie("user_role", user.role);
+
+    if (user.tenantId) {
+      setCookie("tenant_id", user.tenantId);
+    }
+
     setDone(true);
     setTimeout(() => router.replace("/dashboard"), 2000);
   };
